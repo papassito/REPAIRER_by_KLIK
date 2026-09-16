@@ -1,12 +1,18 @@
 package contracts
 
-import "errors"
+import (
+	"errors"
+	"time"
+)
 
 // Plan represents a set of operations to be executed.
 type Plan struct {
-	PlanID     string              `json:"plan_id"`
-	CreatedAt  string              `json:"created_at"`
-	Operations []OperationInstance `json:"operations"`
+	PlanID        string              `json:"plan_id"`
+	CreatedAt     string              `json:"created_at"`
+	ExpiresAt     time.Time           `json:"expires_at,omitempty"`
+	ApprovedBy    string              `json:"approved_by,omitempty"`
+	PlanSignature string              `json:"plan_signature,omitempty"`
+	Operations    []OperationInstance `json:"operations"`
 }
 
 // Validate checks the basic integrity of a plan.

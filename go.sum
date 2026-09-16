@@ -1,0 +1,12 @@
+fyne.io/fyne/v2 v2.4.0 h1:9iXBwGgsga4TRiA5pTjB5j3N2KqAClb32f2n0wR83/k=
+fyne.io/fyne/v2 v2.4.0/go.mod h1:BCY6OUNP2FkCjHBLiqHPQYj2HwHl3r2kC7hM2z2wz9I=
+github.com/gofrs/flock v0.8.1 h1:sTcf5g5bI23y2w7d2NIxSAUmhJgG9+2+g24bdlJz1hA=
+github.com/gofrs/flock v0.8.1/go.mod h1:4L3B2tIq4a250n2b0s0sTz2nJqwd25f2pTupIMTf0yA=
+golang.org/x/image v0.0.0-20191009234506-e7c1f5e7db19/go.mod h1:22u9iWfO2rDDm2W1Y2h1f9SozVG+sS4f1pD2xS2b9ko=
+golang.org/x/sys v0.0.0-20220919091848-fb04ddd9f9c8/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbAp91C1UWDqMjg=
+golang.org/x/sys v0.1.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbAp91C1UWDqMjg=
+golang.org/x/sys v0.5.0 h1:R67pS5+2Gop3I13Y6W23ETG0e2V3I+s9k20E27a233A=
+golang.org/x/sys v0.5.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbAp91C1UWDqMjg=
+golang.org/x/text v0.3.5/go.mod h1:g6R/0Vz24O2s2vM22Vd0nIuL9V23dCgY1tOKu4y7s04=
+golang.org/x/text v0.7.0 h1:aLq+iA1PZ0V2vvoe5e2FgnqLg051G2529T88Qyq2g6k=
+golang.org/x/text v0.7.0/go.mod h1:5Z4e5e8e8c3z3o2Yy2IajvSo9l45Y8C+jMLZ2ADIJ1A=
