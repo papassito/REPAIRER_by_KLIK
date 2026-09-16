@@ -4,6 +4,49 @@ Esta es la bitácora cronológica de auditorías, decisiones, acciones, resultad
 
 ---
 
+### 2026-09-16 (2)
+
+- **Actividad:** Resolución de corrupción local del repositorio Git.
+- **Archivos afectados:** Ninguno (operación sobre la estructura interna de Git).
+- **Decisión/Resultado:** Se diagnosticó y resolvió un error `fatal: git show-ref: bad ref refs/tags/desktop.ini`. El problema fue causado por un archivo `desktop.ini` creado por el sistema operativo dentro del directorio `.git/refs/tags/`. Se eliminó el archivo anómalo del repositorio local, restaurando la funcionalidad de los comandos de Git.
+- **Evidencia disponible:** No aplica (resolución de un problema local).
+- **Estado:** `COMPLETADO`.
+- **Pendientes:** Continuar con la subida inicial del proyecto a GitHub.
+
+---
+
+### 2026-09-16 (1)
+
+- **Actividad:** Limpieza de archivos de configuración de Windows (`desktop.ini`).
+- **Archivos afectados:**
+  - `.gitignore` (actualizado)
+- **Decisión/Resultado:** Se ha añadido `desktop.ini` al archivo `.gitignore` para evitar que estos archivos específicos del sistema operativo se incluyan en el repositorio.
+- **Evidencia disponible:** No aplica.
+- **Estado:** `COMPLETADO`.
+- **Pendientes:** Si algún archivo `desktop.ini` ya fue añadido al repositorio, debe ser eliminado del seguimiento de Git con el comando `git rm --cached --ignore-unmatch **/desktop.ini`.
+
+---
+
+### 2026-09-16
+
+- **Actividad:** Preparación del repositorio para la publicación inicial en GitHub.
+- **Archivos afectados:**
+  - `README.md` (mejorado)
+  - `.gitignore` (creado)
+  - `HISTORIAL DE ACTIVIDADES.MD` (actualizado)
+- **Decisión/Resultado:**
+  - Se ha creado un archivo `README.md` completo que describe el propósito, estado y primeros pasos del proyecto, gestionando las expectativas de los visitantes.
+  - Se ha añadido un archivo `.gitignore` estándar para proyectos Go, con el fin de excluir binarios, dependencias y archivos de entorno.
+  - **Se ha decidido que la publicación inicial del repositorio en GitHub se realizará de forma privada.** Esto permite completar las tareas de saneamiento y seguridad sin exposición pública. La visibilidad se podrá cambiar a "pública" más adelante.
+- **Evidencia disponible:** No aplica (cambios documentales y de configuración).
+- **Estado:** `COMPLETADO`.
+- **Pendientes Críticos antes de publicar:**
+  - **Formateo de código:** Ejecutar `gofmt -w .` para aplicar el formato estándar de Go a los 4 archivos pendientes.
+  - **Saneamiento:** Completar `WP-001` para eliminar artefactos no conformes (TypeScript, Node.js, etc.).
+  - **Seguridad:** Realizar una revisión final para asegurar que no hay secretos (`.env.local`, claves, etc.) en el historial de Git.
+
+---
+
 ### 2026-09-15
 
 - **Actividad:** Recuperación del estado del repositorio a una base compilable (`BUILD_RECOVERED`).
