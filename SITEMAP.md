@@ -7,44 +7,33 @@ Esta es una arquitectura de información `SPECIFIED` para una interfaz futura im
 ## Estructura propuesta
 
 ```text
-Inicio
-├─ Estado de sesión
-├─ Diagnóstico
-│  ├─ Seleccionar alcance
-│  ├─ Ejecutar observación
-│  ├─ Hallazgos
-│  └─ Exportar informe
-├─ Plan de mantenimiento
-│  ├─ Operaciones propuestas
-│  ├─ Clase y riesgo
-│  ├─ Objetivos y efectos
-│  ├─ Precondiciones y permisos
-│  └─ Revisar autorización
-├─ Ejecución
-│  ├─ Progreso por operación
-│  ├─ Eventos y advertencias
-│  ├─ Cancelación segura
-│  └─ Resultado
-├─ Recuperación
-│  ├─ Sesiones reversibles
-│  ├─ Material de respaldo
-│  ├─ Vista previa de compensación
-│  └─ Resultado de restauración
-├─ Historial y auditoría
-│  ├─ Sesiones
-│  ├─ Entradas de ledger
-│  ├─ Verificación de integridad
-│  └─ Exportación redactada
+Inicio (Dashboard)
+├─ Resumen del Sistema y Alertas Críticas
+├─ Inventario
+│  ├─ Hardware (CPU, Memoria, Placa Base)
+│  ├─ Sistema Operativo
+│  └─ Dispositivos
+├─ Salud y Riesgos
+│  ├─ Hallazgos (Findings)
+│  └─ Recomendaciones
+├─ Almacenamiento
+│  ├─ Discos Físicos
+│  ├─ Atributos SMART / NVMe
+│  └─ Desgaste y Vida Útil
+├─ Red
+│  ├─ Interfaces y Conectividad
+│  └─ Puertos y Procesos
+├─ Estado de Windows
+│  ├─ Servicios y Drivers
+│  └─ Eventos Relevantes
+├─ Mantenimiento
+│  ├─ Planes de Reparación
+│  ├─ Ejecución y Verificación
+│  └─ Historial y Ledger
 ├─ Configuración
-│  ├─ Privacidad y retención
-│  ├─ Rutas y límites
-│  ├─ Actualizaciones
-│  └─ Accesibilidad
+│  ├─ Alcance y Políticas
+│  └─ Privacidad y Datos
 └─ Acerca de
-   ├─ Versión y procedencia
-   ├─ Compatibilidad verificada
-   ├─ Licencias
-   └─ Límites y soporte
 ```
 
 ## Reglas de navegación por riesgo

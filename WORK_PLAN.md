@@ -1,10 +1,10 @@
 # WORK PLAN - REPAIRER by KLIK
 
-Este plan de trabajo está actualizado para reflejar la necesidad de sanear el prototipo actual y construir sobre una base Go-only limpia.
+Este plan de trabajo está actualizado para reflejar la finalización de la refactorización y la nueva priorización hacia las capacidades de diagnóstico.
 
 ---
 
-### Fase 1: Saneamiento y Fundación
+### Fase 0: Saneamiento y Fundación (Completada)
 
 - **ID:** WP-001 - **Saneamiento del Repositorio**
   - **Objetivo:** Eliminar todos los artefactos no conformes de la aplicación web TypeScript para cumplir con `TECH-001`.
@@ -13,7 +13,7 @@ Este plan de trabajo está actualizado para reflejar la necesidad de sanear el p
     - 2. Se ha revisado `.env.local` en busca de secretos y se han rotado si es necesario. El archivo no se ha publicado.
     - 3. Se han eliminado del repositorio: `src/`, `node_modules/`, `index.html`, `package.json`, `tsconfig.json`, `vite.config.ts`, `metadata.json`, `.env.local`.
     - 4. El archivo `.gitignore` se ha revisado y adaptado para un proyecto Go puro.
-  - **Estado:** `SPECIFIED`
+  - **Estado:** `VERIFIED`
 
 - **ID:** WP-002 - **Refactorización a Estructura Go Idiomática**
   - **Objetivo:** Reestructurar el prototipo Go a un layout que separe dominios y responsabilidades, según `ADR-009`, preservando el comportamiento actual.
@@ -21,7 +21,7 @@ Este plan de trabajo está actualizado para reflejar la necesidad de sanear el p
   - **Criterio de finalización:**
     - 1. Se han creado pruebas unitarias (`*_test.go`) para la lógica de `core/` (contratos, validación, ledger, compensación). Las respuestas simuladas de `core/app.go` se prueban como simulaciones identificadas, no como comportamiento real.
     - 2. El punto de entrada `main.go` se ha movido a `cmd/repairer/main.go`.
-    - 3. La lógica de `core/` se ha refactorizado en los paquetes correspondientes dentro de `internal/` (app, domain, ledger, etc.), según el mapa de artefactos.
+    - 3. La lógica de `core/` se ha refactorizado en los paquetes correspondientes dentro de `internal/`.
     - 4. El directorio `core/` ha sido eliminado.
     - 5. Se conservan los mismos casos, entradas, resultados esperados e invariantes después de trasladar las pruebas a los paquetes definitivos.
     - 6. `gofmt -l .` no devuelve ningún archivo pendiente de formato.

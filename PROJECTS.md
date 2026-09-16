@@ -10,7 +10,7 @@ Este documento evita mezclar identidades, requisitos, evidencias o entregables q
 
 - **Tipo:** producto principal.
 - **Estado documental:** `SPECIFIED`.
-- **Estado de implementación:** `PROTOTYPE_UNVERIFIED`. Existe código fuente Go, pero carece de pruebas y evidencia funcional.
+- **Estado de implementación:** `IMPLEMENTED_UNVERIFIED`. Existe un núcleo funcional en Go, pero las capacidades de diagnóstico y la UI están pendientes.
 - **Objetivo:** ofrecer un marco seguro para diagnóstico, planificación y ejecución controlada de mantenimiento en Windows.
 - **Arquitectura tecnológica:** Go-only, `SPECIFIED`; implementación `PROTOTYPE_UNVERIFIED`.
 - **Autoridad documental:** los archivos enlazados desde `README.md` en este paquete.
@@ -18,6 +18,13 @@ Este documento evita mezclar identidades, requisitos, evidencias o entregables q
 - **Bitácora de trabajo:** `HISTORIAL DE ACTIVIDADES.MD`.
 
 ## Módulos del producto
+
+### REPAIRER TELEFONICO by KLIK
+
+- **Tipo:** producto independiente.
+- **Estado:** `OUT_OF_SCOPE`.
+- **Relación:** Ninguna. REPAIRER by KLIK es un producto de software para PC y no comparte código, requisitos ni objetivos con ningún producto de reparación telefónica. La mención de este nombre sirve únicamente para delimitar la frontera y evitar confusiones.
+
 
 Los siguientes son dominios lógicos, no pruebas de que existan componentes de software:
 

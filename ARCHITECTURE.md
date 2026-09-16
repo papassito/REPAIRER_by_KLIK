@@ -16,12 +16,29 @@ Esta es una arquitectura de referencia `SPECIFIED`. El lenguaje único aprobado 
 
 ## Contexto
 
+### Principio Zero-Synthetic
+
+REPAIRER tiene prohibido inventar datos. Cada pieza de información debe tener una procedencia clara que distinga, como mínimo, entre:
+- **`OBSERVED`**: Leído directamente de una fuente de hardware o API del SO (ej. temperatura de un sensor).
+- **`DECLARED`**: Obtenido de una especificación externa confiable (ej. TBW nominal de un SSD).
+- **`DERIVED`**: Calculado matemáticamente a partir de otros datos observados o declarados (ej. porcentaje de TBW consumido).
+- **`ESTIMATED`**: Una proyección basada en un historial de datos observados (ej. estimación de llenado de disco).
+- **`UNKNOWN` / `UNSUPPORTED` / `ACCESS_DENIED`**: Estados que reflejan la incapacidad de obtener un dato, que nunca deben ser interpretados como un valor "cero" o "saludable".
+
+### Modelo de Procedencia del Dato
+
+Toda observación relevante debe poder asociarse con un modelo que capture su contexto completo: fuente (API, WMI, etc.), método, timestamp, confianza y las transformaciones aplicadas. Esto es fundamental para cumplir el requisito de explicar la evidencia que sustenta cada hallazgo.
+
+### Flujo Lógico
+
+El motor opera siguiendo una secuencia estricta que impide que un paso autorice indebidamente al siguiente. Diagnosticar no es reparar. Recomendar no es ejecutar.
+
 ```text
 Usuario / Automatización autorizada
                │
                ▼
        Capa de presentación
-               │ casos de uso tipados
+               │ (Casos de uso tipados)
                ▼
    Planificación y política ─────> Informe previo
                │ plan autorizado

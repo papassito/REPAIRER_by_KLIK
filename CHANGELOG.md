@@ -8,6 +8,13 @@ El formato sigue categorías comprensibles —añadido, cambiado, corregido, seg
 
 ## [Unreleased]
 
+- **ID:** `DOCS-BASELINE-V2.0`
+  - **Documentación:**
+    - Se ha realizado una actualización y fortalecimiento masivo de toda la documentación del proyecto.
+    - Se han añadido dominios de diagnóstico formales: Inventario, Salud de Almacenamiento, Red, Puertos, Salud de Windows y Rendimiento.
+    - Se ha reforzado el principio **Zero-Synthetic** y se ha formalizado un modelo de **Procedencia del Dato**.
+    - Se han añadido más de 40 nuevos requisitos funcionales y se ha expandido la matriz de conformidad.
+    - Se han añadido nuevos contratos para las entidades de diagnóstico (`Observation`, `Finding`, etc.).
 - **ID:** `SEC-ARCH-FIXES-02`
   - **Arquitectura:**
     - **ENGINE-001:** Se ha eliminado el `switch op.OperationID` y se ha refactorizado el motor para usar un `OperationRegistry` dinámico con una interfaz `OperationHandler`. Esto resuelve el principal problema de extensibilidad.

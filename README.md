@@ -1,26 +1,30 @@
 # REPAIRER by KLIK
 
-**REPAIRER by KLIK** es un marco de software diseñado para ofrecer diagnóstico, planificación y ejecución controlada de operaciones de mantenimiento en sistemas Windows.
+**REPAIRER by KLIK** es una herramienta de diagnóstico, conocimiento, mantenimiento y reparación controlada para sistemas Windows.
 
-El objetivo es proporcionar una herramienta segura y trazable que separe el análisis de la ejecución, garantizando que solo se realicen cambios autorizados y clasificados según su riesgo.
+Su objetivo es construir una representación verificable del estado real de una PC, detectar problemas y riesgos, explicar sus causas cuando exista evidencia suficiente, recomendar acciones y ejecutar únicamente las operaciones autorizadas que correspondan.
+
+El producto separa estrictamente las fases de su operación:
+
+**OBSERVAR → NORMALIZAR → ANALIZAR → DETECTAR → EXPLICAR → RECOMENDAR → PLANIFICAR → AUTORIZAR → EJECUTAR → VERIFICAR → REGISTRAR**
 
 ## Estado del Proyecto
 
-- **Estado de Implementación:** `PROTOTYPE_UNVERIFIED` / `BUILD_RECOVERED`
+- **Estado de Implementación:** `SPECIFIED` / `IMPLEMENTED_UNVERIFIED`
 - **Arquitectura:** `Go-only`
 
-El proyecto se encuentra en una fase inicial. Existe un prototipo funcional del núcleo lógico escrito en Go, cuyo estado de compilación ha sido verificado (ver `EVIDENCE.md`). Sin embargo, carece de pruebas automatizadas y de una interfaz de usuario integrada.
+El proyecto ha completado una refactorización arquitectónica y una fase de fortalecimiento documental. La estructura del código es ahora idiomática y modular. Las capacidades de diagnóstico (inventario, salud de almacenamiento, etc.) están formalmente especificadas, pero su implementación está pendiente. El núcleo de ejecución y criptografía existe como un prototipo funcional (`IMPLEMENTED_UNVERIFIED`) pero carece de una suite de pruebas completa.
 
-Actualmente, el trabajo se centra en la refactorización del código a una estructura idiomática de Go, como se detalla en el paquete de trabajo `WP-002`. Esta es una condición previa para cualquier desarrollo de nuevas funcionalidades.
+El trabajo actual se centra en la implementación de las capacidades de diagnóstico, como se detalla en el `WORK_PLAN.md`.
 
-Para más detalles, consulte la Arquitectura del Proyecto.
+Para más detalles, consulte los documentos enlazados a continuación.
 
 ## Cómo Empezar
 
-El prototipo actual no tiene una funcionalidad de cara al usuario, pero puede ser compilado.
+El proyecto puede ser compilado, pero la funcionalidad actual se limita a una demo de línea de comandos que ejecuta operaciones de archivo en un entorno temporal.
 
 **Requisitos:**
-- Go 1.21.5 o superior.
+- Go 1.21 o superior.
 
 **Compilación:**
 

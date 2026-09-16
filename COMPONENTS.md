@@ -8,10 +8,18 @@ Los componentes de este documento están `SPECIFIED` como responsabilidades arqu
 
 ### 1. Adaptadores de observación
 
-**Responsabilidad:** consultar fuentes del sistema y producir observaciones tipadas.
+**Responsabilidad:** consultar fuentes del sistema (WMI, APIs de Windows, etc.) y producir `Observaciones` tipadas, cada una con su procedencia.
 
-- Deben ser `READ_ONLY` por defecto.
-- Deben distinguir ausencia, acceso denegado, no soportado y error.
+**Sub-componentes lógicos:**
+- **Adaptador de Inventario:** Recopila información de sistema, CPU, memoria, placa base.
+- **Adaptador de Almacenamiento:** Enumera discos y lee atributos SMART/NVMe.
+- **Adaptador de Red:** Observa interfaces, IPs y estado de conectividad.
+- **Adaptador de Sockets:** Enumera puertos y procesos asociados.
+- **Adaptador de Salud de Windows:** Consulta servicios, drivers y eventos.
+- **Adaptador de Rendimiento:** Toma muestras de uso de CPU/memoria.
+
+**Reglas:**
+- Son `READ_ONLY` por definición.
 - No deben convertir salida localizada o texto libre en autoridad sin validación.
 - No deben solicitar elevación global para consultas que no la requieran.
 
@@ -19,9 +27,14 @@ Los componentes de este documento están `SPECIFIED` como responsabilidades arqu
 
 **Responsabilidad:** validar observaciones, normalizar unidades y producir hallazgos con procedencia.
 
-- No ejecuta acciones correctivas.
-- Conserva la fuente, tiempo y nivel de confianza.
-- Un hallazgo no es una orden de ejecución.
+**Sub-componentes lógicos:**
+- **Motor de Hallazgos (`Findings Engine`):** Aplica reglas a las observaciones para generar `Hallazgos` (ej. "si `Reallocated_Sector_Ct > 0` entonces generar `FINDING_DISK_DEGRADATION`").
+- **Motor de Recomendaciones (`Recommendation Engine`):** Convierte `Hallazgos` en `Recomendaciones` de acción para el usuario.
+
+**Reglas:**
+- No ejecutan acciones correctivas.
+- Un hallazgo o recomendación no es una orden de ejecución.
+- Conservan la trazabilidad hacia las observaciones que los originaron.
 
 ### 3. Catálogo de operaciones
 

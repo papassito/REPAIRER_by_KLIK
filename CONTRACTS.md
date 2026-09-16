@@ -12,6 +12,41 @@ Los ejemplos de este documento son contratos de referencia `SPECIFIED`; no son e
 
 ## Contrato de clase de operación
 
+---
+
+## Contrato de Observación y Procedencia
+
+Toda pieza de información recopilada se ajusta a un contrato que incluye su procedencia.
+
+```json
+{
+  "schema_version": "1.0",
+  "observation_id": "obs-cpu-temp-1663200000",
+  "category": "HARDWARE_MONITOR",
+  "name": "CPU_TEMPERATURE",
+  "value": 65.5,
+  "unit": "CELSIUS",
+  "provenance": {
+    "source": "WMI/MSAcpi_ThermalZoneTemperature",
+    "method": "API_CALL",
+    "timestamp": "2026-09-15T12:00:00Z",
+    "target_ref": "device://cpu/0",
+    "acquisition_status": "OBSERVED",
+    "confidence": "HIGH"
+  },
+  "limitations": "La precisión depende del sensor de hardware y la implementación de ACPI del fabricante."
+}
+```
+
+**Estados de Adquisición (`acquisition_status`):**
+- `OBSERVED`: Leído de una fuente directa.
+- `DERIVED`: Calculado a partir de otras observaciones.
+- `ESTIMATED`: Proyectado a partir de un historial.
+- `DECLARED`: Obtenido de una especificación.
+- `UNKNOWN` / `UNSUPPORTED` / `ACCESS_DENIED` / `ERROR`: La obtención del dato falló.
+
+---
+
 | Clase | Cambia el objetivo | Compensación exigida | Consentimiento mínimo | Automatización por defecto |
 |---|---:|---:|---|---|
 | `READ_ONLY` | No | No aplica | Alcance de sesión | Permitida dentro del alcance |
@@ -25,6 +60,56 @@ Reglas:
 2. Si una operación compuesta contiene varias clases, hereda la más restrictiva para autorización y presentación, sin ocultar las clases individuales.
 3. Una implementación no puede reclasificar dinámicamente hacia menor riesgo.
 4. `IRREVERSIBLE` no afirma imposibilidad forense de recuperar datos.
+
+---
+
+## Contrato de Dispositivo de Almacenamiento
+
+```json
+{
+  "schema_version": "1.0",
+  "device_id": "dev-nvme-ABC12345",
+  "type": "STORAGE_DEVICE",
+  "model": "Example NVMe SSD 1TB",
+  "serial_number_ref": "obs-serial-ABC12345",
+  "protocol": "NVME",
+  "health_metrics": {
+    "percentage_used": {
+      "value": 15,
+      "provenance_ref": "obs-nvme-health-1663200100"
+    },
+    "data_units_written": {
+      "value": 30720000,
+      "unit": "512_KB_UNITS",
+      "provenance_ref": "obs-nvme-health-1663200100"
+    },
+    "tbw_consumed_derived": {
+      "value": 15.0,
+      "unit": "TERABYTES",
+      "provenance_ref": "obs-tbw-derived-1663200101"
+    }
+  }
+}
+```
+
+---
+
+## Contrato de Hallazgo (Finding)
+
+```json
+{
+  "schema_version": "1.0",
+  "finding_id": "fnd-disk-reallocated-sectors-ABC12345",
+  "category": "STORAGE_DEGRADATION",
+  "severity": "HIGH",
+  "target_ref": "dev-nvme-ABC12345",
+  "evidence_refs": ["obs-smart-reallocated-sectors-1663200200"],
+  "explanation": "El disco ha reasignado 5 sectores. Esto indica que algunas áreas de la superficie de almacenamiento han fallado y el firmware ha movido los datos a áreas de repuesto. Es una señal temprana de posible degradación del disco.",
+  "recommendation_ref": "rec-backup-disk-ABC12345"
+}
+```
+
+---
 
 ## Definición de operación
 

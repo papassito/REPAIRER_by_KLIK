@@ -23,6 +23,8 @@ Este documento define controles `SPECIFIED`. No certifica que estén implementad
 - planes autorizados y tokens de consentimiento;
 - ledger, informes y evidencia de prueba;
 - paquetes de instalación, actualización y dependencias;
+- historial de observaciones y tendencias;
+- números de serie de hardware;
 - identidad y reputación del producto.
 
 ## Actores y amenazas
@@ -30,6 +32,7 @@ Este documento define controles `SPECIFIED`. No certifica que estén implementad
 | Amenaza | Ejemplo | Control mínimo |
 |---|---|---|
 | Entrada maliciosa | Ruta con traversal, enlace o sustitución durante la operación | Normalización, acceso seguro al objeto y revalidación inmediata. |
+| Inferencia incorrecta | Un error de WMI se interpreta como un disco saludable | Modelo de procedencia estricto (`OBSERVED`, `ERROR`, etc.) y no convertir errores en estados `OK`. |
 | Inyección | Texto de un plan o ledger interpretado por shell | Catálogo cerrado, argumentos tipados y prohibición de evaluación. |
 | Escalada excesiva | Toda la interfaz se ejecuta como administrador | Separación de proceso y elevación por operación. |
 | Confusión de intención | Un diagnóstico activa limpieza | Separación de plan, consentimiento y ejecución. |
@@ -37,7 +40,7 @@ Este documento define controles `SPECIFIED`. No certifica que estén implementad
 | Manipulación de ledger | Borrar y recalcular hashes locales | Ancla confiable independiente o firma si el modelo de riesgo lo requiere. |
 | Fuga de información | Logs incluyen secretos o contenido privado | Minimización, redacción, permisos y retención. |
 | Paquete comprometido | Actualización o dependencia modificada | Procedencia, firma, inventario y verificación antes de ejecutar. |
-| Denegación de servicio | Operación agota disco, memoria o tiempo | Cuotas, límites, estimación y cancelación segura. |
+| Denegación de servicio | Una consulta de diagnóstico intensiva degrada el sistema | Las operaciones de observación deben ser eficientes y, si es necesario, ejecutarse con menor prioridad. |
 | Repetición | Reuso de una autorización antigua | Nonce, expiración y vínculo con la huella del plan. |
 
 ## Fronteras de confianza

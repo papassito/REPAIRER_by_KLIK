@@ -2,22 +2,21 @@
 
 ## Mapa funcional
 
+El flujo lógico del producto se centra en transformar observaciones de bajo nivel en conocimiento accionable y seguro.
+
 ```text
-Observación
-  └─ Inventario y diagnóstico [READ_ONLY]
-       └─ Hallazgos estructurados
-            └─ Planificador [READ_ONLY]
-                 ├─ Plan sin cambios
-                 ├─ Operaciones [clasificadas]
-                 ├─ Precondiciones y permisos
-                 └─ Efectos y garantías
-                      └─ Consentimiento
-                           └─ Ejecutor controlado
-                                ├─ READ_ONLY
-                                ├─ REVERSIBLE ──> respaldo ──> ledger ──> compensación
-                                ├─ DESTRUCTIVE ──> sin rollback garantizado
-                                └─ IRREVERSIBLE ─> sin rollback soportado
-                                     └─ Resultado e informe
+Observación (Inventario, Salud, Red, etc.) [READ_ONLY]
+  └─ Normalización y Análisis
+       └─ Hallazgos (Findings)
+            └─ Motor de Recomendaciones
+                 └─ Planificador
+                      └─ Plan de Mantenimiento (inerte)
+                           └─ Consentimiento y Autorización
+                                └─ Ejecutor Controlado
+                                     ├─ Operación Reversible ──> Compensación
+                                     └─ Operación Irreversible
+                                          └─ Verificación Posterior
+                                               └─ Ledger y Resultado
 ```
 
 Este diagrama es una arquitectura objetivo `SPECIFIED`; no representa módulos verificados.

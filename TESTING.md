@@ -57,6 +57,20 @@ Las pruebas sobre un SSD de laboratorio pueden verificar la solicitud y el compo
 - operación compuesta cuya clase efectiva no sea la más restrictiva;
 - parámetros adicionales, tipos incorrectos y límites excedidos.
 
+### Diagnóstico y Procedencia
+
+- Consulta a una API de Windows que falla, es denegada o devuelve datos corruptos.
+- Conversión de unidades (ej. bytes a TB) con valores límite.
+- Generación de un hallazgo a partir de observaciones simuladas.
+- Generación de una recomendación a partir de un hallazgo.
+- Casos donde la ausencia de un dato (ej. temperatura de CPU) se maneja como `UNKNOWN` y no como `0`.
+- Pruebas de estimación (ej. desgaste de disco) con datos insuficientes o no lineales.
+
+### Salud de Almacenamiento
+
+- Parsing de datos SMART/NVMe simulados con valores críticos (sectores reasignados, etc.).
+- Cálculo de TBW a partir de unidades de datos escritas.
+
 ### Rutas y objetivos
 
 - rutas relativas, traversal, caracteres especiales y formatos largos;
