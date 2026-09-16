@@ -40,8 +40,16 @@ func (h *FileCleanHandler) Execute(op contracts.OperationInstance, authorizedSco
 		return nil, fmt.Errorf("pre-write path re-validation failed: %w", err)
 	}
 
-	if err := os.WriteFile(targetFile, []byte(cleanedContent), 0644); err != nil {
-		return nil, fmt.Errorf("failed to write cleaned file: %w", err)
+	err = os.WriteFile(targetFile, []byte(cleanedContent), 0644)
+	if err != nil {
+		// According to design, record the failure instead of halting the plan.
+		// The backup was created, so the state is partially changed from the plan's perspective.
+		return &contracts.LedgerRecord{
+			EventType: "OPERATION_COMPLETED",
+			Operation: op,
+			Outcome:   contracts.OperationOutcome{Status: "FAILED_PARTIAL", Changed: false},
+			// We could add error details to the record here.
+		}, nil
 	}
 
 	hasher := sha256.New()
