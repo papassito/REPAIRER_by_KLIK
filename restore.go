@@ -9,7 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"repairer/internal/contracts"
-	"strings"
+	"repairer/internal/security"
 )
 
 func Compensate(record contracts.LedgerRecord) error {
@@ -22,17 +22,22 @@ func Compensate(record contracts.LedgerRecord) error {
 	if record.Compensation.TargetRef == "" || record.Compensation.BackupRef == "" || record.Compensation.BackupHash == "" {
 		return errors.New("compensation requires target, backup, and expected hash")
 	}
+
+	// SECURITY FIX: Re-validate paths immediately before restoration to mitigate TOCTOU.
+	if err := security.ValidatePath(record.Compensation.BackupRef, authorizedScope); err != nil {
+		return fmt.Errorf("security validation failed for backup path during compensation: %w", err)
+	}
+	if err := security.ValidatePath(record.Compensation.TargetRef, authorizedScope); err != nil {
+		return fmt.Errorf("security validation failed for target path during compensation: %w", err)
+	}
+
 	backup, err := readRegularFile(record.Compensation.BackupRef)
 	if err != nil {
 		return fmt.Errorf("read backup: %w", err)
 	}
 
 	hash := sha256.Sum256(backup)
-	// The hash in the descriptor might have a prefix, but the calculated one won't.
-	// For now, we just check if the descriptor's hash *contains* the calculated hash.
-	// A more robust solution would parse the hash format.
-	actualHex := hex.EncodeToString(hash[:])
-	if !strings.Contains(record.Compensation.BackupHash, actualHex) {
+	if actual := hex.EncodeToString(hash[:]); actual != record.Compensation.BackupHash {
 		return errors.New("backup integrity verification failed")
 	}
 

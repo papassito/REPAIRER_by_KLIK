@@ -62,7 +62,14 @@ export const TechnicianWorkbench: React.FC<TechnicianWorkbenchProps> = ({ onOpen
 
   const handleAddLog = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!workLogAction || !activeOrder) return;
+    // Validation Layer
+    if (!activeOrder) return;
+    if (workLogAction.trim().length < 5) {
+      // In a real app, you would show a user-friendly error message.
+      console.error("Validation failed: Action must be at least 5 characters long.");
+      return;
+    }
+
     addWorkLogEntry(activeOrder.id, {
       category: workLogCategory,
       action: workLogAction,

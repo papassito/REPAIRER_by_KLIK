@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/hex"
-	"flag"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -10,38 +9,13 @@ import (
 	"repairer/internal/contracts"
 	"repairer/internal/crypto"
 	"repairer/internal/engine"
-	"repairer/internal/ledger"
 	"repairer/internal/operations"
-	"repairer/ui"
 	"time"
 )
 
 // main is the entry point that demonstrates the core engine flow.
 func main() {
 	fmt.Println("[*] REPAIRER by KLIK - Safe Windows Core Engine Initialized.")
-
-	// --- CLI Argument Parsing ---
-	verifyLedgerCmd := flag.NewFlagSet("verify-ledger", flag.ExitOnError)
-	ledgerPath := verifyLedgerCmd.String("path", "", "Path to the ledger file to verify.")
-
-	executeCmd := flag.NewFlagSet("execute", flag.ExitOnError)
-	dryRun := executeCmd.Bool("dry-run", false, "Perform a dry run without making changes.")
-
-	if len(os.Args) < 2 {
-		// No command provided, launch the UI.
-		ui.LaunchApp()
-		return
-	}
-
-	switch os.Args[1] {
-	case "verify-ledger":
-		verifyLedgerCmd.Parse(os.Args[2:])
-		handleVerifyLedger(*ledgerPath)
-		return
-	case "execute":
-		executeCmd.Parse(os.Args[2:])
-		// Fall through to the demo execution logic, respecting the --dry-run flag.
-	}
 
 	// Setup temporary mock targets for the simulation.
 	tempDir, err := os.MkdirTemp("", "repairer_test")
@@ -102,7 +76,7 @@ func main() {
 		},
 	}
 
-	completedRecords, err := engine.ExecutePlan(plan, ledgerFile, tempDir, registry, privateKey, publicKey, *dryRun)
+	completedRecords, err := engine.ExecutePlan(plan, ledgerFile, tempDir, registry, privateKey, publicKey)
 	if err != nil {
 		fmt.Printf("\n[!!!] A critical error occurred during plan execution: %v\n", err)
 		os.Exit(1)
@@ -120,7 +94,7 @@ func main() {
 
 	if recordToRollback != nil {
 		fmt.Println("\n[*] Simulating Go rollback engine from declarative ledger record...")
-		if err := compensation.Compensate(*recordToRollback); err != nil {
+		if err := compensation.Compensate(*recordToRollback, tempDir); err != nil {
 			fmt.Printf("[!] Rollback failed: %v\n", err)
 			os.Exit(1)
 		}
@@ -129,33 +103,4 @@ func main() {
 
 	// --- Final Verification ---
 	// (This part remains for demo purposes)
-}
-
-func handleVerifyLedger(path string) {
-	if path == "" {
-		fmt.Println("Error: --path flag is required for verify-ledger command.")
-		os.Exit(1)
-	}
-
-	// For verification, we need the public key that signed the ledger.
-	// We load it from the same default location.
-	configDir, err := os.UserConfigDir()
-	if err != nil {
-		panic(fmt.Sprintf("could not get user config directory: %v", err))
-	}
-	repairerConfigDir := filepath.Join(configDir, "repairer")
-	keyFile := filepath.Join(repairerConfigDir, "engine.key")
-
-	publicKey, _, err := crypto.LoadOrGenerateKeys(keyFile)
-	if err != nil {
-		fmt.Printf("Error loading verifier key: %v\n", err)
-		os.Exit(1)
-	}
-
-	if err := ledger.VerifyChain(path, publicKey); err != nil {
-		fmt.Printf("LEDGER CORRUPTED: %v\n", err)
-		os.Exit(1)
-	}
-
-	fmt.Println("LEDGER VERIFIED")
 }

@@ -76,18 +76,28 @@ export interface Part {
   minStock: number;
   location?: string;
 }
-
-export interface EstimateItem {
+interface BaseEstimateItem {
   id: string;
-  type: 'PART' | 'LABOR' | 'SERVICE';
   description: string;
-  partId?: string;
-  partSku?: string;
   quantity: number;
   unitCost: number;
   unitPrice: number;
   total: number;
 }
+
+interface PartEstimateItem extends BaseEstimateItem {
+  type: 'PART';
+  partId: string; // Mandatory for parts
+  partSku: string; // Mandatory for parts
+}
+
+interface LaborEstimateItem extends BaseEstimateItem {
+  type: 'LABOR' | 'SERVICE';
+  partId?: never; // Explicitly forbidden
+  partSku?: never; // Explicitly forbidden
+}
+
+export type EstimateItem = PartEstimateItem | LaborEstimateItem;
 
 export interface Estimate {
   id: string;
