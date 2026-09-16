@@ -1,186 +1,127 @@
 package core
 
 import (
+	"bufio"
+	"crypto/ed25519"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
-	"time"
+
+	"github.com/gofrs/flock"
 )
 
-type RiskClass string
-
-const (
-	RiskReadOnly     RiskClass = "READ_ONLY"
-	RiskReversible   RiskClass = "REVERSIBLE"
-	RiskDestructive  RiskClass = "DESTRUCTIVE"
-	RiskIrreversible RiskClass = "IRREVERSIBLE"
-)
-
-type OperationInstance struct {
-	InstanceID       string            `json:"instance_id"`
-	OperationID      string            `json:"operation_id"`
-	OperationVersion string            `json:"operation_version"`
-	RiskClass        RiskClass         `json:"risk_class"`
-	TargetRef        string            `json:"target_ref"`
-	Parameters       map[string]string `json:"parameters,omitempty"`
-}
-
-type Plan struct {
-	PlanID     string              `json:"plan_id"`
-	CreatedAt  string              `json:"created_at"`
-	Operations []OperationInstance `json:"operations"`
-}
-
-type CompensationDescriptor struct {
-	DescriptorType    string `json:"descriptor_type"`
-	DescriptorVersion string `json:"descriptor_version"`
-	BackupRef         string `json:"backup_ref"`
-	TargetRef         string `json:"target_ref"`
-	BackupHash        string `json:"backup_hash"`
-}
-
-type OperationOutcome struct {
-	Status  string `json:"status"`
-	Changed bool   `json:"changed"`
-}
-
-type LedgerRecord struct {
-	SchemaVersion      string                 `json:"schema_version"`
-	RecordID           string                 `json:"record_id"`
-	Sequence           int                    `json:"sequence"`
-	RecordedAt         string                 `json:"recorded_at"`
-	SessionID          string                 `json:"session_id,omitempty"`
-	ExecutionID        string                 `json:"execution_id,omitempty"`
-	EventType          string                 `json:"event_type"`
-	Operation          OperationInstance      `json:"operation"`
-	Outcome            OperationOutcome       `json:"outcome"`
-	Compensation       CompensationDescriptor `json:"compensation"`
-	PreviousRecordHash string                 `json:"previous_record_hash,omitempty"`
-	RecordHash         string                 `json:"record_hash"`
-}
-
-const (
-	LedgerSchemaVersion = "1.0"
-	CompensationType    = "RESTORE_PREVIOUS_VERSION"
-)
-
-func ValidateRiskClass(class RiskClass) error {
-	switch class {
-	case RiskReadOnly, RiskReversible, RiskDestructive, RiskIrreversible:
-		return nil
-	default:
-		return fmt.Errorf("unknown risk class %q", class)
+// GetLastRecordHash reads the ledger file, finds the last valid record,
+// verifies its integrity, and returns its hash.
+// The verifierKey is used to check the signature of the last record.
+func GetLastRecordHash(ledgerPath string, verifierKey ed25519.PublicKey) (string, error) {
+	// If the file doesn't exist, it's a new ledger with no previous hash.
+	_, err := os.Stat(ledgerPath)
+	if os.IsNotExist(err) {
+		return "", nil // No previous hash for a new ledger.
 	}
-}
 
-func (plan Plan) Validate() error {
-	if strings.TrimSpace(plan.PlanID) == "" || len(plan.Operations) == 0 {
-		return errors.New("plan requires an id and at least one operation")
-	}
-	seen := make(map[string]struct{}, len(plan.Operations))
-	for _, operation := range plan.Operations {
-		if strings.TrimSpace(operation.InstanceID) == "" || strings.TrimSpace(operation.OperationID) == "" {
-			return errors.New("operation requires instance_id and operation_id")
-		}
-		if _, ok := seen[operation.InstanceID]; ok {
-			return fmt.Errorf("duplicate operation instance %q", operation.InstanceID)
-		}
-		seen[operation.InstanceID] = struct{}{}
-		if err := ValidateRiskClass(operation.RiskClass); err != nil {
-			return err
-		}
-		if operation.RiskClass != RiskReadOnly && strings.TrimSpace(operation.TargetRef) == "" {
-			return fmt.Errorf("mutating operation %q requires an explicit target", operation.InstanceID)
-		}
-	}
-	return nil
-}
-
-func PlanDigest(plan Plan) (string, error) {
-	if err := plan.Validate(); err != nil {
-		return "", err
-	}
-	data, err := json.Marshal(plan)
+	file, err := os.Open(ledgerPath)
 	if err != nil {
-		return "", fmt.Errorf("marshal plan: %w", err)
-	}
-	hash := sha256.Sum256(data)
-	return "sha256:" + hex.EncodeToString(hash[:]), nil
-}
-
-func (record LedgerRecord) Validate() error {
-	if record.SchemaVersion != LedgerSchemaVersion || strings.TrimSpace(record.RecordID) == "" || record.Sequence < 1 {
-		return errors.New("invalid ledger schema, record id, or sequence")
-	}
-	if _, err := time.Parse(time.RFC3339, record.RecordedAt); err != nil {
-		return fmt.Errorf("recorded_at must be RFC3339 UTC: %w", err)
-	}
-	if record.EventType == "" || record.Outcome.Status == "" {
-		return errors.New("ledger event and outcome status are required")
-	}
-	if err := ValidateRiskClass(record.Operation.RiskClass); err != nil {
-		return err
-	}
-	if record.Compensation.DescriptorType != "" && record.Compensation.DescriptorType != CompensationType {
-		return fmt.Errorf("unknown compensation descriptor type %q", record.Compensation.DescriptorType)
-	}
-	if strings.Contains(strings.ToLower(record.Compensation.BackupRef), "command") {
-		return errors.New("executable compensation references are not allowed")
-	}
-	return nil
-}
-
-func HashLedgerRecord(record LedgerRecord) (string, error) {
-	record.RecordHash = ""
-	data, err := json.Marshal(record)
-	if err != nil {
-		return "", fmt.Errorf("marshal ledger record: %w", err)
-	}
-	hash := sha256.Sum256(data)
-	return "sha256:" + hex.EncodeToString(hash[:]), nil
-}
-
-func AppendLedger(path string, record LedgerRecord) error {
-	if err := record.Validate(); err != nil {
-		return err
-	}
-	computed, err := HashLedgerRecord(record)
-	if err != nil {
-		return err
-	}
-	if record.RecordHash != "" && record.RecordHash != computed {
-		return errors.New("ledger record hash mismatch")
-	}
-	record.RecordHash = computed
-	data, err := json.Marshal(record)
-	if err != nil {
-		return fmt.Errorf("marshal ledger: %w", err)
-	}
-	if err := os.MkdirAll(filepath.Dir(path), 0700); err != nil {
-		return fmt.Errorf("create ledger directory: %w", err)
-	}
-	file, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0600)
-	if err != nil {
-		return fmt.Errorf("open ledger: %w", err)
+		return "", fmt.Errorf("could not open ledger file: %w", err)
 	}
 	defer file.Close()
-	if _, err := file.Write(append(data, '\n')); err != nil {
-		return fmt.Errorf("write ledger: %w", err)
+
+	// Use a scanner to read the file line by line to find the last valid one.
+	scanner := bufio.NewScanner(file)
+	var lastLine string
+	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.TrimSpace(line) != "" {
+			lastLine = line
+		}
 	}
+
+	if err := scanner.Err(); err != nil {
+		return "", fmt.Errorf("error reading ledger file: %w", err)
+	}
+
+	// If the file was empty, lastLine will be empty.
+	if lastLine == "" {
+		return "", nil
+	}
+
+	var lastRecord LedgerRecord
+	if err := json.Unmarshal([]byte(lastLine), &lastRecord); err != nil {
+		return "", fmt.Errorf("could not parse last record in ledger: %w", err)
+	}
+
+	// Quick integrity check: re-hash the record and compare.
+	// This is a precursor to the full `verify-ledger` command.
+	expectedHash, err := HashLedgerRecord(lastRecord)
+	if err != nil {
+		return "", fmt.Errorf("could not re-hash last record for validation: %w", err)
+	}
+
+	if lastRecord.RecordHash != expectedHash {
+		return "", fmt.Errorf("ledger corruption detected: last record hash mismatch (expected %s, got %s)", expectedHash, lastRecord.RecordHash)
+	}
+
+	// LEDGER-004: Verify the signature of the last record if a key is provided.
+	if verifierKey != nil {
+		valid, err := VerifySignature(lastRecord, verifierKey)
+		if err != nil {
+			return "", fmt.Errorf("error verifying signature of last record: %w", err)
+		}
+		if !valid {
+			return "", fmt.Errorf("ledger corruption detected: last record has an invalid signature")
+		}
+	}
+
+	return lastRecord.RecordHash, nil
+}
+
+// AppendLedger marshals a record and appends it to the ledger file using a file lock
+// to ensure safe concurrent access.
+func AppendLedger(ledgerPath string, record LedgerRecord) error {
+	// Use flock for file locking to prevent concurrent writes.
+	lock := flock.New(ledgerPath)
+	err := lock.Lock()
+	if err != nil {
+		return fmt.Errorf("could not acquire ledger lock: %w", err)
+	}
+	defer lock.Unlock()
+
+	// Open the file in append mode, create if it doesn't exist.
+	f, err := os.OpenFile(ledgerPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return fmt.Errorf("could not open ledger file for appending: %w", err)
+	}
+	defer f.Close()
+
+	recordJSON, err := json.Marshal(record)
+	if err != nil {
+		return fmt.Errorf("failed to marshal record to JSON: %w", err)
+	}
+
+	// Write the JSON record followed by a newline to make it a JSONL file.
+	if _, err := f.WriteString(string(recordJSON) + "\n"); err != nil {
+		return fmt.Errorf("failed to write to ledger file: %w", err)
+	}
+
 	return nil
 }
 
-// GetLastRecordHash is a placeholder function. A real implementation would read
-// the last line of the ledger file, parse it, verify its hash, and return it.
-// It returns an empty string if the ledger does not exist, starting a new chain.
-func GetLastRecordHash(path string) (string, error) {
-	// This is a placeholder. A real implementation is required as per WP-005.
-	// For this prototype, we always start a new chain.
-	// A real implementation would also need to handle file locking.
-	return "", nil
+// HashLedgerRecord computes a SHA-256 hash of a ledger record.
+// It temporarily blanks the RecordHash field to ensure the hash is computed
+// on the content of the record, not on its own hash.
+func HashLedgerRecord(record LedgerRecord) (string, error) {
+	recordToHash := record
+	recordToHash.RecordHash = ""               // Exclude the hash itself from being hashed.
+	recordToHash.Signature = LedgerSignature{} // Exclude the signature from being hashed.
+
+	data, err := json.Marshal(recordToHash)
+	if err != nil {
+		return "", fmt.Errorf("failed to marshal record for hashing: %w", err)
+	}
+
+	hash := sha256.Sum256(data)
+	return hex.EncodeToString(hash[:]), nil
 }

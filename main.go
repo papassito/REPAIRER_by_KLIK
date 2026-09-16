@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/ed25519"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
@@ -9,12 +10,14 @@ import (
 	"os"
 	"path/filepath"
 	"repairer/core"
+	"repairer/core/catalog"
+	"repairer/core/security"
 	"time"
 )
 
 // runMaintenancePlan is the core engine that processes a plan, executes operations,
 // records them in a ledger, and handles compensation.
-func runMaintenancePlan(plan core.Plan, ledgerPath string) ([]core.LedgerRecord, error) {
+func runMaintenancePlan(plan core.Plan, ledgerPath, authorizedScope string, signerKey ed25519.PrivateKey, verifierKey ed25519.PublicKey) ([]core.LedgerRecord, error) {
 	fmt.Printf("[*] Executing Plan '%s'...\n", plan.PlanID)
 
 	if err := plan.Validate(); err != nil {
@@ -22,22 +25,31 @@ func runMaintenancePlan(plan core.Plan, ledgerPath string) ([]core.LedgerRecord,
 	}
 	fmt.Println(" [+] Plan structure is valid.")
 
-	var lastRecordHash string
+	// Initialize the hash chain by reading the last record from the ledger.
+	lastRecordHash, err := core.GetLastRecordHash(ledgerPath, verifierKey)
+	if err != nil {
+		return nil, fmt.Errorf("could not read last ledger state: %w", err)
+	}
 	var completedRecords []core.LedgerRecord
 
 	for _, op := range plan.Operations {
 		fmt.Printf("\n[*] Running Operation: '%s' (%s)\n", op.InstanceID, op.OperationID)
 
+		// SECURITY: Validate against the operation catalog (whitelist).
+		if !catalog.AllowedOperations[op.OperationID] {
+			return completedRecords, fmt.Errorf("operation ID '%s' is not in the allowed catalog", op.OperationID)
+		}
+
 		var record *core.LedgerRecord
-		var err error
+		// var err error // This is now declared inside the switch
 
 		// This switch acts as a dispatcher to the corresponding operation implementation.
 		// In a real application, this might be a map of functions from an operation catalog.
 		switch op.OperationID {
 		case "file.clean":
-			record, err = executeFileClean(op)
+			record, err = executeFileClean(op, authorizedScope)
 		case "file.observe":
-			record, err = executeFileObserve(op)
+			record, err = executeFileObserve(op, authorizedScope)
 		default:
 			err = fmt.Errorf("unknown operation ID: %s", op.OperationID)
 		}
@@ -66,6 +78,17 @@ func runMaintenancePlan(plan core.Plan, ledgerPath string) ([]core.LedgerRecord,
 		}
 		record.RecordHash = hash
 
+		// Sign the record with the engine's key.
+		signature, err := core.SignRecord(record.RecordHash, signerKey)
+		if err != nil {
+			return completedRecords, fmt.Errorf("could not sign ledger record: %w", err)
+		}
+		record.Signature = core.LedgerSignature{
+			SignerID:  hex.EncodeToString(verifierKey),
+			Signature: signature,
+		}
+
+		// Atomically append the final, signed record to the ledger.
 		if err := core.AppendLedger(ledgerPath, *record); err != nil {
 			return completedRecords, fmt.Errorf("failed to write ledger record for op '%s': %w", op.InstanceID, err)
 		}
@@ -82,7 +105,7 @@ func runMaintenancePlan(plan core.Plan, ledgerPath string) ([]core.LedgerRecord,
 }
 
 // executeFileClean implements a REVERSIBLE operation to clean a file's content.
-func executeFileClean(op core.OperationInstance) (*core.LedgerRecord, error) {
+func executeFileClean(op core.OperationInstance, authorizedScope string) (*core.LedgerRecord, error) {
 	if op.RiskClass != core.RiskReversible {
 		return nil, errors.New("file.clean must be a REVERSIBLE operation")
 	}
@@ -91,6 +114,22 @@ func executeFileClean(op core.OperationInstance) (*core.LedgerRecord, error) {
 	if !ok || backupFile == "" {
 		return nil, errors.New("missing 'backup_ref' parameter for file.clean")
 	}
+
+	// SECURITY: Validate paths against security policies before any I/O.
+	fmt.Println("[*] Validating operation paths against security policies...")
+	for _, p := range []string{targetFile, backupFile} {
+		isProtected, err := security.IsProtectedPath(p)
+		if err != nil {
+			return nil, fmt.Errorf("path security check failed for '%s': %w", p, err)
+		}
+		if isProtected {
+			return nil, fmt.Errorf("path '%s' is within a protected system directory and cannot be modified", p)
+		}
+		if err := security.ValidatePath(p, authorizedScope); err != nil {
+			return nil, fmt.Errorf("path validation failed: %w", err)
+		}
+	}
+	fmt.Println(" [+] All paths are within the authorized scope and not protected.")
 	// SECURITY: The targetFile path MUST be normalized and validated against the authorized
 	// scope of the plan. This prototype does not include path validation, which is a
 	// critical defense against path traversal attacks (e.g., "../../../boot.ini").
@@ -149,7 +188,7 @@ func executeFileClean(op core.OperationInstance) (*core.LedgerRecord, error) {
 }
 
 // executeFileObserve implements a READ_ONLY operation to observe a file's state.
-func executeFileObserve(op core.OperationInstance) (*core.LedgerRecord, error) {
+func executeFileObserve(op core.OperationInstance, authorizedScope string) (*core.LedgerRecord, error) {
 	if op.RiskClass != core.RiskReadOnly {
 		return nil, errors.New("file.observe must be a READ_ONLY operation")
 	}
@@ -158,6 +197,20 @@ func executeFileObserve(op core.OperationInstance) (*core.LedgerRecord, error) {
 		return nil, errors.New("missing 'target_ref' for file.observe")
 	}
 
+	// SECURITY: Validate path against security policies before any I/O.
+	fmt.Println("[*] Validating operation path against security policies...")
+	isProtected, err := security.IsProtectedPath(targetFile)
+	if err != nil {
+		return nil, fmt.Errorf("path security check failed for '%s': %w", targetFile, err)
+	}
+	if isProtected {
+		// For observe, we could allow it but with a warning. For now, be strict.
+		return nil, fmt.Errorf("path '%s' is within a protected system directory and cannot be observed", targetFile)
+	}
+	if err := security.ValidatePath(targetFile, authorizedScope); err != nil {
+		return nil, fmt.Errorf("path validation failed: %w", err)
+	}
+	fmt.Println(" [+] Path is within the authorized scope and not protected.")
 	fmt.Printf("[*] Observing file: %s\n", targetFile)
 
 	data, err := os.ReadFile(targetFile)
@@ -211,6 +264,13 @@ func main() {
 	}
 	fmt.Printf("[*] Target system file initialized at: %s\n", targetFile)
 
+	// For this demo, generate a key pair for the engine to sign ledger records.
+	// In a real application, this key would be managed securely.
+	publicKey, privateKey, err := core.GenerateKeys()
+	if err != nil {
+		panic(fmt.Sprintf("failed to generate signature keys: %v", err))
+	}
+
 	// Create a maintenance plan with both READ_ONLY and REVERSIBLE operations.
 	plan := core.Plan{
 		PlanID:    "plan-019a-win-hosts-observe-clean",
@@ -237,7 +297,7 @@ func main() {
 	}
 
 	// Execute the plan and get the resulting ledger records.
-	completedRecords, err := runMaintenancePlan(plan, ledgerFile)
+	completedRecords, err := runMaintenancePlan(plan, ledgerFile, tempDir, privateKey, publicKey)
 	if err != nil {
 		fmt.Printf("\n[!!!] A critical error occurred during plan execution: %v\n", err)
 		os.Exit(1)
