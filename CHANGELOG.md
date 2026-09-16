@@ -8,6 +8,32 @@ El formato sigue categorías comprensibles —añadido, cambiado, corregido, seg
 
 ## [Unreleased]
 
+- **ID:** `SEC-ARCH-FIXES-02`
+  - **Arquitectura:**
+    - **ENGINE-001:** Se ha eliminado el `switch op.OperationID` y se ha refactorizado el motor para usar un `OperationRegistry` dinámico con una interfaz `OperationHandler`. Esto resuelve el principal problema de extensibilidad.
+  - **Seguridad:**
+    - **TOCTOU:** Se ha añadido revalidación de rutas inmediatamente antes de las operaciones de escritura (`os.WriteFile`) y renombrado (`os.Rename`) para mitigar las vulnerabilidades de "Time-of-check to time-of-use".
+    - **SEC-001:** Se ha mejorado la validación de nombres de archivo reservados de Windows para incluir casos con extensiones (ej. `CON.txt`).
+  - **Corregido:**
+    - **Persistencia de Claves:** Se ha corregido el error crítico que causaba que las claves de firma se guardaran en un directorio temporal que era eliminado. Las claves ahora persisten entre ejecuciones en el directorio de configuración del usuario.
+  - **Añadido:**
+    - **Contratos:** Se ha creado el archivo `core/contracts.go` para definir explícitamente las estructuras de datos y se ha incrementado `LedgerSchemaVersion` a `1.1` para reflejar la adición de firmas.
+  - **Documentación:**
+    - Se ha actualizado `CHANGELOG.md` para reflejar estas correcciones críticas.
+
+- **ID:** `SEC-CRITICAL-FIXES-01`
+  - **Seguridad:**
+    - **SEC-001:** Se ha refactorizado `core/security/path_validator.go` para corregir un error crítico que impedía validar rutas de archivos no existentes. La validación de `scope` ahora previene falsos positivos (ej. `C:\data` vs `C:\database`). Se han añadido comprobaciones para nombres de dispositivo reservados de Windows (`CON`, `PRN`, etc.).
+    - **LEDGER-003:** Se ha corregido un bug crítico en `core/signature.go` que causaba que la firma y verificación fallaran debido a no manejar el prefijo `sha256:` en los hashes.
+  - **Corregido:**
+    - Se ha implementado un mecanismo de persistencia de claves basado en archivos para el prototipo, evitando que el ledger se invalide en cada reinicio.
+  - **Añadido:**
+    - **TEST-001:** Se ha creado la suite de pruebas `core/security/security_test.go` para validar la nueva lógica de seguridad de rutas y proteger contra regresiones.
+  - **Documentación:**
+    - Se ha actualizado `CONTRACTS.md` para reflejar el nuevo campo `Signature` y se ha incrementado la versión del esquema del ledger.
+    - Se ha actualizado `ARCHITECTURE.md` para documentar la decisión de persistencia de claves.
+    - Se ha actualizado `SECURITY.md` para reflejar los controles de seguridad de rutas mejorados.
+
 - Existe código fuente correspondiente a un prototipo Go.
 - La compilación y el análisis estático requieren evidencia reproducible válida.
 - No existen archivos de pruebas automatizadas.
