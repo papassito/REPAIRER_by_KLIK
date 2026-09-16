@@ -1,20 +1,24 @@
-# Archivos de configuración y caché del sistema operativo (Windows)
-# Estos archivos son generados por el sistema y no pertenecen al código fuente.
-desktop.ini
-Thumbs.db
-ehthumbs.db
-
-# Papelera de reciclaje
-$RECYCLE.BIN/
-
-# Artefactos de compilación de Go
-# Los ejecutables y binarios compilados no deben ser versionados.
-# Se generan a partir del código fuente con 'go build'.
+# Binarios compilados
 *.exe
 *.exe~
 *.dll
 *.so
 *.dylib
+repairer
 
-/repairer
-/repairer.exe
+# Archivos de dependencias de Go
+/vendor/
+
+# Archivos de entorno
+.env
+.env.*
+!.env.example
+
+# Archivos de sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Archivos de configuración de IDEs
+.vscode/
+.idea/
