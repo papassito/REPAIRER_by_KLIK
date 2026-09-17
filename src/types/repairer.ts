@@ -1,18 +1,27 @@
-export type RepairOrderStatus = 
-  | 'DRAFT' 
-  | 'VALIDATED' 
-  | 'AUTHORIZED' 
-  | 'PREPARING' 
-  | 'READY' 
-  | 'RUNNING' 
-  | 'SUCCEEDED_VERIFIED' 
-  | 'SUCCEEDED_UNVERIFIED' 
-  | 'FAILED_NO_CHANGE' 
-  | 'FAILED_PARTIAL' 
+export type UserRole = 'ADMIN' | 'TECHNICIAN' | 'CUSTOMER';
+
+export type OrderStatus = 
+  | 'PENDING' 
+  | 'IN_PROGRESS' 
+  | 'QUALITY_CHECK' 
+  | 'COMPLETED' 
+  | 'WAITING_PART' 
+  | 'WAITING_CLIENT' 
+  | 'REPAIR_COMPLETED' 
+  | 'WARRANTY'
+  | 'APPROVED'
+  | 'AUTHORIZED'
   | 'CANCELLED'
-  | 'REJECTED'
   | 'CLOSED'
-  | 'RECEIVED' | 'INSPECTION' | 'DIAGNOSING' | 'DIAGNOSED' | 'ESTIMATE_PENDING' | 'WAITING_APPROVAL' | 'APPROVED' | 'IN_REPAIR' | 'QUALITY_CONTROL' | 'READY_FOR_PICKUP' | 'DELIVERED' | 'WAITING_PART';
+  | 'DELIVERED'
+  | 'DIAGNOSED'
+  | 'DIAGNOSING'
+  | 'DRAFT'
+  | 'ESTIMATE_PENDING'
+  | 'FAILED_NO_CHANGE'
+  | 'FAILED_PARTIAL'
+  | 'INSPECTION'
+  | 'WAITING_APPROVAL';
 
 export type EvidenceAngle = 'front' | 'back' | 'bottom' | 'top' | 'left' | 'right' | 'internal_damage' | 'after_qc' | 'system_registry' | 'file_integrity' | 'security_log';
 
@@ -65,16 +74,15 @@ export interface Device {
 
 export interface Part {
   id: string;
-  sku: string;
   name: string;
-  category: string;
-  compatibleModels: string[];
-  supplier?: string;
-  cost: number;
-  salePrice: number;
+  sku: string;
   stock: number;
   minStock: number;
+  price: number;
+  cost: number;
   location?: string;
+  locationBin?: string;   // Propiedad agregada para solucionar TS2551
+  warrantyDays?: number;  // Propiedad agregada para solucionar TS2339
 }
 interface BaseEstimateItem {
   id: string;
@@ -136,7 +144,8 @@ export interface WorkLogEntry {
 export interface QCItem {
   id: string;
   name: string;
-  status: 'PASS' | 'FAIL' | 'WARNING';
+  subsystem?: string;
+  status: 'PASS' | 'FAIL' | 'WARNING' | 'NOT_TESTED';
   notes?: string;
 }
 
@@ -199,7 +208,7 @@ export interface RepairOrder {
   customerEmail: string;
   deviceId: string;
   deviceSummary: string;
-  status: RepairOrderStatus;
+  status: OrderStatus;
   priority: 'HIGH' | 'NORMAL' | 'LOW';
   intakeReason: string;
   receivedAccessories: string[];
@@ -249,7 +258,7 @@ export interface RepairOrder {
   delivery?: DeliveryRecord;
   warranty?: WarrantyRecord;
   statusHistory: Array<{
-    status: RepairOrderStatus;
+    status: OrderStatus;
     timestamp: string;
     changedBy: string;
     comment?: string;

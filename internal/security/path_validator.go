@@ -12,7 +12,7 @@ var (
 	ErrEmptyPath    = errors.New("error: la ruta no puede estar vacía")
 )
 
-// Dispositivos reservados del sistema operativo Windows.
+// Lista oficial de nombres reservados por el sistema operativo Windows
 var reservedNames = map[string]bool{
 	"CON": true, "PRN": true, "AUX": true, "NUL": true,
 	"COM1": true, "COM2": true, "COM3": true, "COM4": true,
@@ -21,7 +21,7 @@ var reservedNames = map[string]bool{
 	"LPT5": true, "LPT6": true, "LPT7": true, "LPT8": true, "LPT9": true,
 }
 
-// ValidateSafePath verifica que la ruta sea segura y no contenga nombres reservados.
+// ValidateSafePath sanitiza la ruta y verifica que no contenga nombres prohibidos.
 func ValidateSafePath(baseDir, targetPath string) (string, error) {
 	if strings.TrimSpace(targetPath) == "" {
 		return "", ErrEmptyPath
@@ -37,15 +37,13 @@ func ValidateSafePath(baseDir, targetPath string) (string, error) {
 		return "", err
 	}
 
+	// 1. Verificación de salto de directorio (Path Traversal)
 	if !strings.HasPrefix(cleanTarget, cleanBase) {
 		return "", ErrInvalidPath
 	}
 
-	// Extraemos el nombre base del archivo
+	// 2. Verificación de nombres reservados en TODAS las partes divididas por puntos
 	baseName := filepath.Base(cleanTarget)
-
-	// Dividimos por puntos para revisar CADA segmento del nombre del archivo
-	// Ejemplo: "my.CON.txt" -> ["my", "CON", "txt"]
 	parts := strings.Split(baseName, ".")
 	for _, part := range parts {
 		normalizedPart := strings.ToUpper(strings.TrimSpace(part))
