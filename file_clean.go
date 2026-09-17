@@ -35,7 +35,7 @@ func (h *FileCleanHandler) Execute(op contracts.OperationInstance, authorizedSco
 	cleanedContent := "127.0.0.1 localhost\n"
 
 	// TOCTOU Mitigation: Re-validate path immediately before writing.
-	if err := security.ValidatePath(targetFile, authorizedScope); err != nil {
+	if _, err := security.ValidateSafePath(authorizedScope, targetFile); err != nil {
 		_ = os.Remove(backupFile)
 		return nil, fmt.Errorf("pre-write path re-validation failed: %w", err)
 	}

@@ -42,36 +42,18 @@ func TestSignAndVerifySignature(t *testing.T) {
 		t.Fatalf("Failed to generate keys for test: %v", err)
 	}
 
-	// A different key pair to test failure cases
 	otherPubKey, _, _ := crypto.LoadOrGenerateKeys(filepath.Join(t.TempDir(), "other.key"))
-
 	recordHash := "sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
-
-	// 2. Sign the record
 	signature, err := crypto.SignRecord(recordHash, privKey)
 	if err != nil {
 		t.Fatalf("SignRecord failed: %v", err)
 	}
+	record := contracts.LedgerRecord{RecordHash: recordHash, Signature: contracts.LedgerSignature{Signature: signature}}
 
-	// 3. Create a signed ledger record
-	record := contracts.LedgerRecord{
-		RecordHash: recordHash,
-		Signature: contracts.LedgerSignature{
-			SignerID:  "some_signer", // SignerID is not validated in this unit test
-			Signature: signature,
-		},
+	if ok, err := crypto.VerifySignature(record, pubKey); err != nil || !ok {
+		t.Errorf("Verification with correct key failed. ok=%v, err=%v", ok, err)
 	}
-
-	// 4. Test verification
-	// Positive case: should succeed
-	valid, err := crypto.VerifySignature(record, pubKey)
-	if err != nil || !valid {
-		t.Errorf("Verification with correct key failed. valid=%v, err=%v", valid, err)
-	}
-
-	// Negative case: should fail with wrong key
-	invalid, err := crypto.VerifySignature(record, otherPubKey)
-	if err == nil && invalid {
+	if ok, _ := crypto.VerifySignature(record, otherPubKey); ok {
 		t.Error("Verification with incorrect key succeeded, but should have failed.")
 	}
 }

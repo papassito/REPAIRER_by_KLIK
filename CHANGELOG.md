@@ -8,20 +8,6 @@ El formato sigue categorías comprensibles —añadido, cambiado, corregido, seg
 
 ## [Unreleased]
 
-- **ID:** `FE-VALIDATION-SETUP-01`
-  - **Añadido:**
-    - Se ha creado el módulo `src/utils/orderValidator.ts` para centralizar las reglas de negocio de las órdenes de reparación en el frontend.
-    - Se ha añadido el archivo `tsconfig.json` con la configuración necesaria para compilar un proyecto React + TypeScript con Vite.
-    - Se han instalado las dependencias de desarrollo `@types/react` y `@types/react-dom`.
-  - **Cambiado:**
-    - Se ha refactorizado el componente `src/components/workbench/TechnicianWorkbench.tsx` para convertirlo en un formulario controlado que utiliza el nuevo validador.
-    - El `TechnicianWorkbench` ahora muestra una lista de errores de validación al usuario, mejorando la experiencia y la calidad de los datos.
-  - **Corregido:**
-    - Se ha corregido la interfaz `QCItem` en `src/types/repairer.ts` para alinearla con los datos de prueba, solucionando errores de compilación de TypeScript.
-    - Se han resuelto todos los errores de compilación del frontend, permitiendo que `npx tsc --noEmit` se ejecute limpiamente.
-  - **Documentación:**
-    - Se ha actualizado `CHANGELOG.md` para registrar el progreso en la capa de presentación.
-
 - **ID:** `DOCS-BASELINE-V2.0`
   - **Documentación:**
     - Se ha realizado una actualización y fortalecimiento masivo de toda la documentación del proyecto.
@@ -60,22 +46,6 @@ El formato sigue categorías comprensibles —añadido, cambiado, corregido, seg
 - No existen archivos de pruebas automatizadas.
 - No existe evidencia documental de una validación funcional sobre un entorno Windows limpio.
 - No existe evidencia de implementación de la interfaz Fyne.
-
-## [docs-0.4.0] - 2026-09-15
-
-### Corregido
-- **Estado del Repositorio:** Se ha recuperado el proyecto a un estado compilable (`BUILD_RECOVERED`) tras un intento fallido de implementación de UI. Se confirmó la ubicación de los archivos de UI en una carpeta de respaldo y se verificó la integridad del prototipo Go.
-
-### Añadido
-- **Evidencia (`EVIDENCE.md`):** Se ha añadido el registro `E-001` con la evidencia reproducible de la compilación exitosa del prototipo Go tras la recuperación.
-
-## [docs-0.4.0] - 2026-09-15
-
-### Corregido
-- **Estado del Repositorio:** Se ha recuperado el proyecto a un estado compilable tras un intento fallido de implementación de UI. Se eliminaron los artefactos de UI rotos y se restauró el punto de entrada `main.go`.
-
-### Añadido
-- **Evidencia (`EVIDENCE.md`):** Se ha añadido el registro `E-001` con la evidencia reproducible de la compilación exitosa del prototipo Go tras la recuperación.
 
 ## [docs-0.3.4] - 2026-09-15
 

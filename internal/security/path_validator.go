@@ -22,7 +22,9 @@ var reservedNames = map[string]bool{
 }
 
 // ValidateSafePath sanitiza la ruta y verifica que no contenga nombres prohibidos.
+// Devuelve la ruta absoluta y limpia si es segura, o un error en caso contrario.
 func ValidateSafePath(baseDir, targetPath string) (string, error) {
+	// 1. Basic sanitization: Reject empty or whitespace-only paths.
 	if strings.TrimSpace(targetPath) == "" {
 		return "", ErrEmptyPath
 	}
@@ -32,9 +34,11 @@ func ValidateSafePath(baseDir, targetPath string) (string, error) {
 		return "", err
 	}
 
+	// 2. Convert to a clean, absolute path for reliable comparison.
 	cleanTarget, err := filepath.Abs(filepath.Clean(targetPath))
 	if err != nil {
 		return "", err
+		return "", err // Propagate errors from path cleaning.
 	}
 
 	// 1. Verificación de salto de directorio (Path Traversal)
@@ -43,6 +47,8 @@ func ValidateSafePath(baseDir, targetPath string) (string, error) {
 	}
 
 	// 2. Verificación de nombres reservados en TODAS las partes divididas por puntos
+	// 3. Check for reserved Windows names *before* scope validation.
+	// This ensures the most specific error (ErrReservedName) is returned, fixing a test case.
 	baseName := filepath.Base(cleanTarget)
 	parts := strings.Split(baseName, ".")
 	for _, part := range parts {
@@ -50,6 +56,19 @@ func ValidateSafePath(baseDir, targetPath string) (string, error) {
 		if reservedNames[normalizedPart] {
 			return "", ErrReservedName
 		}
+	}
+
+	// 4. Get a clean, absolute path for the base directory.
+	cleanBase, err := filepath.Abs(filepath.Clean(baseDir))
+	if err != nil {
+		return "", err
+	}
+
+	// 5. Enforce strict scope boundary. Adding a path separator to the base path
+	// prevents sibling directory traversal (e.g., base '/data' matching target '/database').
+	// The `cleanTarget != cleanBase` check correctly allows the target to be the base directory itself.
+	if !strings.HasPrefix(cleanTarget, cleanBase+string(filepath.Separator)) && cleanTarget != cleanBase {
+		return "", ErrInvalidPath
 	}
 
 	return cleanTarget, nil
