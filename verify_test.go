@@ -17,6 +17,7 @@ func createTestLedger(t *testing.T, path string, records []contracts.LedgerRecor
 	defer f.Close()
 
 	for _, rec := range records {
+		// Use AppendRecord to ensure file locking and correct formatting
 		if err := ledger.AppendRecord(path, rec); err != nil {
 			t.Fatalf("Failed to append record: %v", err)
 		}
@@ -35,12 +36,14 @@ func TestVerifyChain(t *testing.T) {
 	rec1.RecordHash = hash1
 	sig1, _ := crypto.SignRecord(hash1, privKey)
 	rec1.Signature.Signature = sig1
+	rec1.Signature.SignerID = "test-signer" // Example
 
 	rec2 := contracts.LedgerRecord{RecordID: "rec-2", Sequence: 2, PreviousRecordHash: hash1}
 	hash2, _ := ledger.HashLedgerRecord(rec2)
 	rec2.RecordHash = hash2
 	sig2, _ := crypto.SignRecord(hash2, privKey)
 	rec2.Signature.Signature = sig2
+	rec2.Signature.SignerID = "test-signer" // Example
 
 	t.Run("Valid Chain", func(t *testing.T) {
 		ledgerPath := filepath.Join(t.TempDir(), "valid.ledger")

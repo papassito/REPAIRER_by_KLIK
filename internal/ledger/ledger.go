@@ -7,7 +7,7 @@ import (
 	"sync"
 )
 
-// Record define una entrada inmutable dentro del libro mayor.
+// Record representa un registro individual e inmutable dentro de la cadena.
 type Record struct {
 	ID          string `json:"id"`
 	Data        []byte `json:"data"`
@@ -17,7 +17,7 @@ type Record struct {
 
 // Ledger administra la lista de registros con protección de concurrencia.
 type Ledger struct {
-	mu      sync.RWMutex // Cerrojo RWMutex: permite múltiples lecturas o una sola escritura.
+	mu      sync.RWMutex // Cerrojo RWMutex para evitar condiciones de carrera.
 	records []Record
 }
 
@@ -26,20 +26,20 @@ var (
 	ErrCorruptedChain = errors.New("error: la integridad de la cadena ha sido comprometida")
 )
 
-// NewLedger inicializa una instancia segura del libro mayor.
+// NewLedger inicializa una nueva instancia del libro mayor.
 func NewLedger() *Ledger {
 	return &Ledger{
 		records: make([]Record, 0),
 	}
 }
 
-// AppendRecord agrega un nuevo registro de forma completamente segura (Thread-Safe).
+// AppendRecord agrega un registro de forma totalmente segura entre múltiples hilos.
 func (l *Ledger) AppendRecord(id string, data []byte) (Record, error) {
 	if len(data) == 0 {
 		return Record{}, ErrEmptyData
 	}
 
-	// Bloqueo de ESCRITURA: Nadie más puede leer ni escribir mientras esto se ejecuta.
+	// Bloqueo de escritura exclusivo
 	l.mu.Lock()
 	defer l.mu.Unlock()
 
@@ -66,9 +66,9 @@ func (l *Ledger) AppendRecord(id string, data []byte) (Record, error) {
 	return newRecord, nil
 }
 
-// VerifyChain audita toda la cadena asegurando lecturas concurrentes seguras.
+// VerifyChain audita la integridad de la cadena permitiendo lecturas concurrentes.
 func (l *Ledger) VerifyChain() error {
-	// Bloqueo de LECTURA: Múltiples procesos pueden verificar al mismo tiempo sin bloquearse entre sí.
+	// Bloqueo de lectura compartido
 	l.mu.RLock()
 	defer l.mu.RUnlock()
 
