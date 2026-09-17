@@ -45,7 +45,7 @@ func ExecutePlan(plan contracts.Plan, ledgerPath, authorizedScope string, regist
 			if p == "" {
 				continue
 			}
-			if err := security.ValidatePath(p, authorizedScope); err != nil {
+			if _, err := security.ValidateSafePath(authorizedScope, p); err != nil {
 				return nil, fmt.Errorf("path validation failed: %w", err)
 			}
 		}

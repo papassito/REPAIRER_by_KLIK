@@ -1,0 +1,136 @@
+﻿Listado de rutas de carpetas para el volumen solusol
+El número de serie del volumen es 00000027 3A62:1A24
+Y:\DOCUMENTOS\GITHUB\REPAIRER_BY_KLIK
+|   app.go
+|   ARCHITECTURE.md
+|   ARCHITECTURE_REFACTOR_REPORT.md
+|   backup.go
+|   catalog.go
+|   chain.go
+|   CHANGELOG.md
+|   compensation.go
+|   compensation_test.go
+|   COMPONENTS.md
+|   CONFORMANCE_MATRIX.md
+|   CONTRACTS.md
+|   crypto_test.go
+|   dashboard.go
+|   engine_test.go
+|   EVIDENCE.md
+|   executor.go
+|   file_clean.go
+|   file_observe.go
+|   FINAL_IMPLEMENTATION_REPORT.md
+|   go.mod
+|   go.sum
+|   GOVERNANCE.md
+|   hashing.go
+|   HISTORIAL DE ACTIVIDADES.MD
+|   index.html
+|   keys.go
+|   ledger.go
+|   ledger_test.go
+|   ledger_view.go
+|   main.go
+|   MAP.md
+|   metadata.json
+|   operations_test.go
+|   orderValidator.ts
+|   P0_EXECUTION_REPORT.md
+|   package.json
+|   path_validator.go
+|   persistence.go
+|   plan.go
+|   plans_view.go
+|   policy.go
+|   PROJECTS.md
+|   README.md
+|   REFRACTOR_VALIDATION_REPORT.md
+|   registry.go
+|   REQUIREMENTS.md
+|   restore.go
+|   risk.go
+|   SECURITY.md
+|   security_test.go
+|   signing.go
+|   SITEMAP.md
+|   TESTING.md
+|   tsconfig.json
+|   validation.go
+|   verify.go
+|   verify_test.go
+|   vite.config.ts
+|   WORK_PLAN.md
+|   
++---AUDIT_REPORT_20260916_190347
+|       system_info.txt
+|       tree.txt
+|       
++---core
+|       app.go
+|       compensation.go
+|       contracts.go
+|       engine.go
+|       ledger.go
+|       signature.go
+|       
++---internal
+|   +---ledger
+|   |       ledger.go
+|   |       ledger_test.go
+|   |       
+|   \---security
+|           orderValidator.ts
+|           path_validator.go
+|           path_validator_test.go
+|           
++---node_modules
+|   \---typescript
+|       \---lib
+|               _tsserver.js
+|               
+\---src
+    |   index.css
+    |   
+    +---components
+    |   +---audit
+    |   |       AuditLogViewer.tsx
+    |   |       
+    |   +---certification
+    |   |       E2ECertificationModal.tsx
+    |   |       
+    |   +---dashboard
+    |   |       ExecutiveDashboard.tsx
+    |   |       
+    |   +---device-lab
+    |   |       DeviceLab.tsx
+    |   |       
+    |   +---inventory
+    |   |       InventoryManager.tsx
+    |   |       
+    |   +---layout
+    |   |       Navbar.tsx
+    |   |       Sidebar.tsx
+    |   |       
+    |   +---orders
+    |   |       OrderLifecycleView.tsx
+    |   |       OrderList.tsx
+    |   |       
+    |   +---portal
+    |   |       CustomerPortalModal.tsx
+    |   |       
+    |   +---quality
+    |   |       QualityControlView.tsx
+    |   |       
+    |   \---workbench
+    |           TechnicianWorkbench.tsx
+    |           
+    +---context
+    |       RepairerContext.tsx
+    |       
+    +---data
+    |       seedData.ts
+    |       
+    \---types
+            repairer.ts
+            

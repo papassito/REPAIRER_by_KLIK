@@ -1,0 +1,7 @@
+﻿
+
+GoTestExitCode : 1
+GoVetExitCode  : 1
+
+
+

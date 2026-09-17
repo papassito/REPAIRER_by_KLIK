@@ -6,8 +6,8 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"io/fs"
 	"path/filepath"
-	"repairer/internal/security"
 )
 
 type Backup struct {
@@ -16,8 +16,20 @@ type Backup struct {
 	Size   int64
 }
 
+// readRegularFile reads data from a file, ensuring it's not a directory.
+func readRegularFile(path string) ([]byte, error) {
+	info, err := os.Stat(path)
+	if err != nil {
+		return nil, err
+	}
+	if info.IsDir() {
+		return nil, fs.ErrInvalid
+	}
+	return os.ReadFile(path)
+}
+
 func PrepareBackup(target, backup string) (Backup, error) {
-	if target == "" || backup == "" || security.NormalizePath(target) == security.NormalizePath(backup) {
+	if target == "" || backup == "" || filepath.Clean(target) == filepath.Clean(backup) {
 		return Backup{}, errors.New("target and backup must be distinct explicit paths")
 	}
 	data, err := readRegularFile(target)

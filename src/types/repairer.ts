@@ -218,6 +218,7 @@ export interface RepairOrder {
   assignedTechnicianId?: string;
   assignedTechnicianName?: string;
   evidence: Array<{
+    technicianNotes?: string; // Propiedad agregada para solucionar TS2339
     id: string;
     repairOrderId: string;
     type: EvidenceAngle;
@@ -246,6 +247,7 @@ export interface RepairOrder {
   authorizedBy?: string;
   workLogs: WorkLogEntry[];
   partsConsumed: Array<{
+    technicianNotes?: string;
     partId: string;
     sku: string;
     name: string;

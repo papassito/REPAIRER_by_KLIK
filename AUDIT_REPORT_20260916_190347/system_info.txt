@@ -1,0 +1,197 @@
+﻿
+
+WindowsBuildLabEx                                       : 19041.1.amd64fre.vb_release.1912
+                                                          06-1406
+WindowsCurrentVersion                                   : 6.3
+WindowsEditionId                                        : Professional
+WindowsInstallationType                                 : Client
+WindowsInstallDateFromRegistry                          : 30/07/2026 04:43:44 a. m.
+WindowsProductId                                        : 00330-80000-00000-AA439
+WindowsProductName                                      : Windows 10 Pro
+WindowsRegisteredOrganization                           : 
+WindowsRegisteredOwner                                  : Radio 2027
+WindowsSystemRoot                                       : C:\Windows
+WindowsVersion                                          : 2009
+BiosCharacteristics                                     : {7, 10, 11, 12...}
+BiosBIOSVersion                                         : {ALASKA - 1072009, 5302, 
+                                                          American Megatrends - 50011}
+BiosBuildNumber                                         : 
+BiosCaption                                             : 5302
+BiosCodeSet                                             : 
+BiosCurrentLanguage                                     : en|US|iso8859-1
+BiosDescription                                         : 5302
+BiosEmbeddedControllerMajorVersion                      : 255
+BiosEmbeddedControllerMinorVersion                      : 255
+BiosFirmwareType                                        : Uefi
+BiosIdentificationCode                                  : 
+BiosInstallableLanguages                                : 9
+BiosInstallDate                                         : 
+BiosLanguageEdition                                     : 
+BiosListOfLanguages                                     : {en|US|iso8859-1, 
+                                                          fr|FR|iso8859-1, zh|TW|unicode, 
+                                                          zh|CN|unicode...}
+BiosManufacturer                                        : American Megatrends Inc.
+BiosName                                                : 5302
+BiosOtherTargetOS                                       : 
+BiosPrimaryBIOS                                         : True
+BiosReleaseDate                                         : 02/10/2025 05:00:00 p. m.
+BiosSeralNumber                                         : System Serial Number
+BiosSMBIOSBIOSVersion                                   : 5302
+BiosSMBIOSMajorVersion                                  : 3
+BiosSMBIOSMinorVersion                                  : 3
+BiosSMBIOSPresent                                       : True
+BiosSoftwareElementState                                : Running
+BiosStatus                                              : OK
+BiosSystemBiosMajorVersion                              : 5
+BiosSystemBiosMinorVersion                              : 17
+BiosTargetOperatingSystem                               : 0
+BiosVersion                                             : ALASKA - 1072009
+CsAdminPasswordStatus                                   : Unknown
+CsAutomaticManagedPagefile                              : True
+CsAutomaticResetBootOption                              : True
+CsAutomaticResetCapability                              : True
+CsBootOptionOnLimit                                     : 
+CsBootOptionOnWatchDog                                  : 
+CsBootROMSupported                                      : True
+CsBootStatus                                            : {0, 0, 0, 0...}
+CsBootupState                                           : Normal boot
+CsCaption                                               : DESKTOP-PDFAANM
+CsChassisBootupState                                    : Safe
+CsChassisSKUNumber                                      : Default string
+CsCurrentTimeZone                                       : -420
+CsDaylightInEffect                                      : 
+CsDescription                                           : AT/AT COMPATIBLE
+CsDNSHostName                                           : DESKTOP-PDFAANM
+CsDomain                                                : WORKGROUP
+CsDomainRole                                            : StandaloneWorkstation
+CsEnableDaylightSavingsTime                             : True
+CsFrontPanelResetStatus                                 : Unknown
+CsHypervisorPresent                                     : False
+CsInfraredSupported                                     : False
+CsInitialLoadInfo                                       : 
+CsInstallDate                                           : 
+CsKeyboardPasswordStatus                                : Unknown
+CsLastLoadInfo                                          : 
+CsManufacturer                                          : ASUS
+CsModel                                                 : System Product Name
+CsName                                                  : DESKTOP-PDFAANM
+CsNetworkAdapters                                       : {Wi-Fi, Ethernet, Ethernet 2, 
+                                                          Conexión de red Bluetooth...}
+CsNetworkServerModeEnabled                              : True
+CsNumberOfLogicalProcessors                             : 32
+CsNumberOfProcessors                                    : 1
+CsProcessors                                            : {AMD Ryzen 9 5950X 16-Core 
+                                                          Processor            }
+CsOEMStringArray                                        : {Default string, Default 
+                                                          string, BLACK MAGIC, Default 
+                                                          string...}
+CsPartOfDomain                                          : False
+CsPauseAfterReset                                       : -1
+CsPCSystemType                                          : Desktop
+CsPCSystemTypeEx                                        : Desktop
+CsPowerManagementCapabilities                           : 
+CsPowerManagementSupported                              : 
+CsPowerOnPasswordStatus                                 : Unknown
+CsPowerState                                            : Unknown
+CsPowerSupplyState                                      : Safe
+CsPrimaryOwnerContact                                   : 
+CsPrimaryOwnerName                                      : Radio 2027
+CsResetCapability                                       : Other
+CsResetCount                                            : -1
+CsResetLimit                                            : -1
+CsRoles                                                 : {LM_Workstation, LM_Server, NT}
+CsStatus                                                : OK
+CsSupportContactDescription                             : 
+CsSystemFamily                                          : To be filled by O.E.M.
+CsSystemSKUNumber                                       : SKU
+CsSystemType                                            : x64-based PC
+CsThermalState                                          : Safe
+CsTotalPhysicalMemory                                   : 68621955072
+CsPhyicallyInstalledMemory                              : 67108864
+CsUserName                                              : DESKTOP-PDFAANM\Radio 2027
+CsWakeUpType                                            : PowerSwitch
+CsWorkgroup                                             : WORKGROUP
+OsName                                                  : Microsoft Windows 10 Pro
+OsType                                                  : WINNT
+OsOperatingSystemSKU                                    : 48
+OsVersion                                               : 10.0.19045
+OsCSDVersion                                            : 
+OsBuildNumber                                           : 19045
+OsHotFixes                                              : {KB5066135, KB5011048, 
+                                                          KB5015684, KB5071959...}
+OsBootDevice                                            : \Device\HarddiskVolume1
+OsSystemDevice                                          : \Device\HarddiskVolume3
+OsSystemDirectory                                       : C:\Windows\system32
+OsSystemDrive                                           : C:
+OsWindowsDirectory                                      : C:\Windows
+OsCountryCode                                           : 52
+OsCurrentTimeZone                                       : -420
+OsLocaleID                                              : 080a
+OsLocale                                                : es-MX
+OsLocalDateTime                                         : 16/09/2026 07:03:48 p. m.
+OsLastBootUpTime                                        : 14/09/2026 04:29:39 p. m.
+OsUptime                                                : 2.02:34:08.4192822
+OsBuildType                                             : Multiprocessor Free
+OsCodeSet                                               : 1252
+OsDataExecutionPreventionAvailable                      : True
+OsDataExecutionPrevention32BitApplications              : True
+OsDataExecutionPreventionDrivers                        : True
+OsDataExecutionPreventionSupportPolicy                  : OptIn
+OsDebug                                                 : False
+OsDistributed                                           : False
+OsEncryptionLevel                                       : 256
+OsForegroundApplicationBoost                            : Maximum
+OsTotalVisibleMemorySize                                : 67013628
+OsFreePhysicalMemory                                    : 43705388
+OsTotalVirtualMemorySize                                : 76975100
+OsFreeVirtualMemory                                     : 30074800
+OsInUseVirtualMemory                                    : 46900300
+OsTotalSwapSpaceSize                                    : 
+OsSizeStoredInPagingFiles                               : 9961472
+OsFreeSpaceInPagingFiles                                : 9189932
+OsPagingFiles                                           : {C:\pagefile.sys}
+OsHardwareAbstractionLayer                              : 10.0.19041.6456
+OsInstallDate                                           : 29/07/2026 09:43:44 p. m.
+OsManufacturer                                          : Microsoft Corporation
+OsMaxNumberOfProcesses                                  : 4294967295
+OsMaxProcessMemorySize                                  : 137438953344
+OsMuiLanguages                                          : {es-MX}
+OsNumberOfLicensedUsers                                 : 
+OsNumberOfProcesses                                     : 412
+OsNumberOfUsers                                         : 2
+OsOrganization                                          : 
+OsArchitecture                                          : 64 bits
+OsLanguage                                              : es-MX
+OsProductSuites                                         : {TerminalServicesSingleSession}
+OsOtherTypeDescription                                  : 
+OsPAEEnabled                                            : 
+OsPortableOperatingSystem                               : False
+OsPrimary                                               : True
+OsProductType                                           : WorkStation
+OsRegisteredUser                                        : Radio 2027
+OsSerialNumber                                          : 00330-80000-00000-AA439
+OsServicePackMajorVersion                               : 0
+OsServicePackMinorVersion                               : 0
+OsStatus                                                : OK
+OsSuites                                                : {TerminalServices, 
+                                                          TerminalServicesSingleSession}
+OsServerLevel                                           : 
+KeyboardLayout                                          : es-MX
+TimeZone                                                : (UTC-07:00) Arizona
+LogonServer                                             : \\DESKTOP-PDFAANM
+PowerPlatformRole                                       : Desktop
+HyperVisorPresent                                       : False
+HyperVRequirementDataExecutionPreventionAvailable       : True
+HyperVRequirementSecondLevelAddressTranslation          : True
+HyperVRequirementVirtualizationFirmwareEnabled          : True
+HyperVRequirementVMMonitorModeExtensions                : True
+DeviceGuardSmartStatus                                  : Off
+DeviceGuardRequiredSecurityProperties                   : 
+DeviceGuardAvailableSecurityProperties                  : 
+DeviceGuardSecurityServicesConfigured                   : 
+DeviceGuardSecurityServicesRunning                      : 
+DeviceGuardCodeIntegrityPolicyEnforcementStatus         : 
+DeviceGuardUserModeCodeIntegrityPolicyEnforcementStatus : 
+
+
+

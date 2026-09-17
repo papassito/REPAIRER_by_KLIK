@@ -94,7 +94,7 @@ func main() {
 
 	if recordToRollback != nil {
 		fmt.Println("\n[*] Simulating Go rollback engine from declarative ledger record...")
-		if err := compensation.Compensate(*recordToRollback, tempDir); err != nil {
+		if err := compensation.Compensate(*recordToRollback); err != nil {
 			fmt.Printf("[!] Rollback failed: %v\n", err)
 			os.Exit(1)
 		}

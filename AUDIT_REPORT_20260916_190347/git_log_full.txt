@@ -1,0 +1,285 @@
+﻿commit 171bb4189cc534a0acdd498777e8458649a916cf
+Author: papassito <info@solusol.net>
+Date:   Wed Sep 16 18:54:08 2026 -0700
+
+    6
+
+ CHANGELOG.md                                     |  14 +
+ HISTORIAL DE ACTIVIDADES.MD                      |  41 +--
+ internal/security/orderValidator.ts              |  36 ++
+ internal/security/path_validator.go              |  10 +-
+ internal/security/path_validator_test.go         |  37 +-
+ orderValidator.ts                                |  27 ++
+ package.json                                     |  24 +-
+ src/components/workbench/TechnicianWorkbench.tsx | 438 +++++------------------
+ src/types/repairer.ts                            |  53 +--
+ tsconfig.json                                    |  24 ++
+ 10 files changed, 274 insertions(+), 430 deletions(-)
+
+commit 37d43bf6e61c02afd645485da695fd6feba2aa97
+Author: papassito <info@solusol.net>
+Date:   Wed Sep 16 18:15:08 2026 -0700
+
+    3
+
+ internal/ledger/ledger.go                |  86 +++++++++++++++++++++
+ internal/ledger/ledger_test.go           |  43 +++++++++++
+ internal/security/path_validator.go      |  58 ++++++++++++++
+ internal/security/path_validator_test.go |  56 ++++++++++++++
+ ledger.go                                |  86 +++++++++++++++++++++
+ ledger_test.go                           | 127 ++++++++-----------------------
+ src/components/desktop.ini               | Bin 246 -> 0 bytes
+ src/types/verify_test.go                 |  89 ----------------------
+ verify_test.go                           |   3 +
+ 9 files changed, 365 insertions(+), 183 deletions(-)
+
+commit aa4a6e7b1fcc407710eceef9fa6c367832295f40
+Author: papassito <info@solusol.net>
+Date:   Wed Sep 16 12:58:18 2026 -0700
+
+    05
+
+ HISTORIAL DE ACTIVIDADES.MD                      | 15 ++++
+ main.go                                          | 59 +---------------
+ restore.go                                       | 17 +++--
+ src/components/workbench/TechnicianWorkbench.tsx |  9 ++-
+ src/types/repairer.ts                            | 20 ++++--
+ src/types/verify_test.go                         | 89 ++++++++++++++++++++++++
+ verify_test.go                                   | 86 +++++++++++++++++++++++
+ 7 files changed, 226 insertions(+), 69 deletions(-)
+
+commit 070c2cdcd707217cc217267678b4c2a9d84528cf
+Author: papassito <info@solusol.net>
+Date:   Wed Sep 16 12:39:24 2026 -0700
+
+    4
+
+ engine_test.go     | 170 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ file_clean.go      |  12 +++-
+ operations_test.go | 150 ++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 330 insertions(+), 2 deletions(-)
+
+commit 2e55cf214a7be92922f1d877f5dc16b734c539b4
+Author: papassito <info@solusol.net>
+Date:   Wed Sep 16 12:13:37 2026 -0700
+
+    4
+
+ FINAL_IMPLEMENTATION_REPORT.md | 113 +++++++++++++++++++++++
+ HISTORIAL DE ACTIVIDADES.MD    | 199 +++--------------------------------------
+ P0_EXECUTION_REPORT.md         |  94 +++++++++++++++++++
+ app.go                         |  26 ++++++
+ compensation_test.go           | 101 +++++++++++++++++++++
+ crypto_test.go                 |  77 ++++++++++++++++
+ dashboard.go                   |  16 ++++
+ go.mod                         |   7 +-
+ go.sum                         |  12 +++
+ ledger_test.go                 | 107 ++++++++++++++++++++++
+ ledger_view.go                 |  33 +++++++
+ main.go                        | 161 +++++++++++++++++++++++++++++++++
+ plan.go                        |  14 ++-
+ plans_view.go                  |  31 +++++++
+ policy.go                      |  22 +++++
+ restore.go                     |   7 +-
+ security_test.go               | 117 ++++++++++++++++++++++++
+ verify.go                      |  69 ++++++++++++++
+ 18 files changed, 1015 insertions(+), 191 deletions(-)
+
+commit cf4c7ca8205972b1569a62e93130af0144d1c0ce
+Author: papassito <info@solusol.net>
+Date:   Wed Sep 16 11:45:30 2026 -0700
+
+    3
+
+ ARCHITECTURE.md                |  19 +++++-
+ CHANGELOG.md                   |   7 +++
+ COMPONENTS.md                  |  27 +++++---
+ CONFORMANCE_MATRIX.md          |  29 ++++++---
+ CONTRACTS.md                   |  85 +++++++++++++++++++++++++
+ MAP.md                         |  29 +++++----
+ PROJECTS.md                    |   9 ++-
+ README.md                      |  20 +++---
+ REFRACTOR_VALIDATION_REPORT.md |  97 +++++++++++++++++++++++++++++
+ REQUIREMENTS.md                |  73 ++++++++++++++++++++++
+ SECURITY.md                    |   5 +-
+ SITEMAP.md                     |  61 ++++++++----------
+ TESTING.md                     |  14 +++++
+ WORK_PLAN.md                   |   8 +--
+ catalog.go                     |   6 --
+ compensation.go                |  13 ----
+ ledger.go                      |  45 --------------
+ main.go                        | 106 -------------------------------
+ path_validator.go              | 137 -----------------------------------------
+ persistence.go                 |  37 -----------
+ registry.go                    |  32 ----------
+ risk.go                        |  11 ----
+ 22 files changed, 403 insertions(+), 467 deletions(-)
+
+commit 17ad6e131dd991883d6440728b43c045ec1c276f
+Author: papassito <info@solusol.net>
+Date:   Wed Sep 16 11:33:31 2026 -0700
+
+    2
+
+ ARCHITECTURE_REFACTOR_REPORT.md |  59 ++++++++
+ CHANGELOG.md                    |  26 ++++
+ backup.go                       |  67 +++++++++
+ catalog.go                      |   5 +-
+ chain.go                        |  62 +++++++++
+ compensation.go                 |  13 ++
+ core/compensation.go            | 139 -------------------
+ core/contracts.go               |   0
+ core/engine.go                  |   0
+ core/ledger.go                  | 127 -----------------
+ core/signature.go               |  52 -------
+ executor.go                     | 100 ++++++++++++++
+ file_clean.go                   |  64 +++++++++
+ file_observe.go                 |  49 +++++++
+ hashing.go                      |  24 ++++
+ keys.go                         |  40 ++++++
+ ledger.go                       |  45 +++++++
+ main.go                         | 292 ++++------------------------------------
+ path_validator.go               |  56 +++++---
+ persistence.go                  |  37 +++++
+ plan.go                         |  31 +++++
+ registry.go                     |  32 +++++
+ restore.go                      |  65 +++++++++
+ risk.go                         |  11 ++
+ security_test.go                |   0
+ signing.go                      |  53 ++++++++
+ validation.go                   |  17 +++
+ 27 files changed, 866 insertions(+), 600 deletions(-)
+
+commit 7b47dca06211f1d4c57c09def4e525fabe4a80ca
+Author: papassito <info@solusol.net>
+Date:   Wed Sep 16 11:14:15 2026 -0700
+
+    updates1
+
+ catalog.go        |   9 +++
+ core/ledger.go    | 231 ++++++++++++++++++++----------------------------------
+ core/signature.go |  52 ++++++++++++
+ main.go           |  76 ++++++++++++++++--
+ path_validator.go | 111 ++++++++++++++++++++++++++
+ 5 files changed, 326 insertions(+), 153 deletions(-)
+
+commit 555a236b4b9a7c10b99ec5011fe6019612b16bd1
+Author: papassito <info@solusol.net>
+Date:   Wed Sep 16 10:55:07 2026 -0700
+
+    0
+
+ .gitignore |  32 +++----
+ main.go    | 280 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 298 insertions(+), 14 deletions(-)
+
+commit 3766b605e8a107c2cf64a60fba988d8dd454225a
+Author: papassito <info@solusol.net>
+Date:   Wed Sep 16 10:43:12 2026 -0700
+
+    1
+
+ .gitignore                               |  32 ++--
+ .gitkeep                                 |   1 +
+ core/desktop.ini                         | Bin 246 -> 0 bytes
+ desktop.ini                              | Bin 246 -> 0 bytes
+ docs/desktop.ini                         | Bin 246 -> 0 bytes
+ main.go                                  | 280 -------------------------------
+ src/components/audit/desktop.ini         | Bin 246 -> 0 bytes
+ src/components/certification/desktop.ini | Bin 246 -> 0 bytes
+ src/components/dashboard/desktop.ini     | Bin 246 -> 0 bytes
+ src/components/device-lab/desktop.ini    | Bin 246 -> 0 bytes
+ src/components/inventory/desktop.ini     | Bin 246 -> 0 bytes
+ src/components/layout/desktop.ini        | Bin 246 -> 0 bytes
+ src/components/orders/desktop.ini        | Bin 246 -> 0 bytes
+ src/components/portal/desktop.ini        | Bin 246 -> 0 bytes
+ src/components/quality/desktop.ini       | Bin 246 -> 0 bytes
+ src/components/workbench/desktop.ini     | Bin 246 -> 0 bytes
+ src/context/desktop.ini                  | Bin 246 -> 0 bytes
+ src/data/desktop.ini                     | Bin 246 -> 0 bytes
+ src/desktop.ini                          | Bin 246 -> 0 bytes
+ src/types/desktop.ini                    | Bin 246 -> 0 bytes
+ 20 files changed, 15 insertions(+), 298 deletions(-)
+
+commit c6eee88040bac79e83823b723278ae20f85ddaa9
+Author: papassito <info@solusol.net>
+Date:   Wed Sep 16 09:43:25 2026 -0700
+
+    0
+
+ .gitignore                               | 42 ++++++++++++++-----------------
+ HISTORIAL DE ACTIVIDADES.MD              | 43 ++++++++++++++++++++++++++++++++
+ README.md                                | 39 +++++++++++++++++++++++++++--
+ main.go                                  |  2 +-
+ node_modules/typescript/lib/_tsserver.js |  0
+ 5 files changed, 100 insertions(+), 26 deletions(-)
+
+commit d34beb7f26ce8746176c7cc30d76ec1e2d5d5332
+Author: papassito <info@solusol.net>
+Date:   Wed Sep 16 09:17:18 2026 -0700
+
+    Initial commit
+
+ .gitattributes                                     |    2 +
+ .gitignore                                         |   28 +
+ ARCHITECTURE.md                                    |  182 +++
+ CHANGELOG.md                                       |  141 ++
+ COMPONENTS.md                                      |  131 ++
+ CONFORMANCE_MATRIX.md                              |   19 +
+ CONTRACTS.md                                       |  185 +++
+ EVIDENCE.md                                        |   74 ++
+ GOVERNANCE.md                                      |  137 ++
+ HISTORIAL DE ACTIVIDADES.MD                        |  147 +++
+ MAP.md                                             |  121 ++
+ PROJECTS.md                                        |   55 +
+ README.md                                          |    2 +
+ REQUIREMENTS.md                                    |   98 ++
+ SECURITY.md                                        |  148 +++
+ SITEMAP.md                                         |  105 ++
+ TESTING.md                                         |  147 +++
+ WORK_PLAN.md                                       |   92 ++
+ core/app.go                                        |   50 +
+ core/compensation.go                               |  139 ++
+ core/desktop.ini                                   |  Bin 0 -> 246 bytes
+ core/ledger.go                                     |  186 +++
+ desktop.ini                                        |  Bin 0 -> 246 bytes
+ docs/desktop.ini                                   |  Bin 0 -> 246 bytes
+ go.mod                                             |    3 +
+ index.html                                         |    0
+ main.go                                            |  280 ++++
+ metadata.json                                      |    8 +
+ package.json                                       |    1 +
+ src/components/audit/AuditLogViewer.tsx            |  180 +++
+ src/components/audit/desktop.ini                   |  Bin 0 -> 246 bytes
+ .../certification/E2ECertificationModal.tsx        |  243 ++++
+ src/components/certification/desktop.ini           |  Bin 0 -> 246 bytes
+ src/components/dashboard/ExecutiveDashboard.tsx    |  366 ++++++
+ src/components/dashboard/desktop.ini               |  Bin 0 -> 246 bytes
+ src/components/desktop.ini                         |  Bin 0 -> 246 bytes
+ src/components/device-lab/DeviceLab.tsx            |  339 +++++
+ src/components/device-lab/desktop.ini              |  Bin 0 -> 246 bytes
+ src/components/inventory/InventoryManager.tsx      |  233 ++++
+ src/components/inventory/desktop.ini               |  Bin 0 -> 246 bytes
+ src/components/layout/Navbar.tsx                   |  163 +++
+ src/components/layout/Sidebar.tsx                  |  211 +++
+ src/components/layout/desktop.ini                  |  Bin 0 -> 246 bytes
+ src/components/orders/OrderLifecycleView.tsx       | 1373 ++++++++++++++++++++
+ src/components/orders/OrderList.tsx                |  227 ++++
+ src/components/orders/desktop.ini                  |  Bin 0 -> 246 bytes
+ src/components/portal/CustomerPortalModal.tsx      |  214 +++
+ src/components/portal/desktop.ini                  |  Bin 0 -> 246 bytes
+ src/components/quality/QualityControlView.tsx      |  245 ++++
+ src/components/quality/desktop.ini                 |  Bin 0 -> 246 bytes
+ src/components/workbench/TechnicianWorkbench.tsx   |  374 ++++++
+ src/components/workbench/desktop.ini               |  Bin 0 -> 246 bytes
+ src/context/RepairerContext.tsx                    | 1228 +++++++++++++++++
+ src/context/desktop.ini                            |  Bin 0 -> 246 bytes
+ src/data/desktop.ini                               |  Bin 0 -> 246 bytes
+ src/data/seedData.ts                               |  824 ++++++++++++
+ src/desktop.ini                                    |  Bin 0 -> 246 bytes
+ src/index.css                                      |    0
+ src/types/desktop.ini                              |  Bin 0 -> 246 bytes
+ src/types/repairer.ts                              |  338 +++++
+ tsconfig.json                                      |    0
+ vite.config.ts                                     |    1 +
+ 62 files changed, 9040 insertions(+)

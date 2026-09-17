@@ -7,6 +7,15 @@ interface TechnicianWorkbenchProps {
   onSaveOrder: (updatedOrder: RepairOrder) => void;
 }
 
+// Se crea una lista de opciones para el select, desacoplando los datos de la vista.
+// Esto facilita el mantenimiento y asegura la consistencia con el tipo OrderStatus.
+const statusOptions: { value: OrderStatus; label: string }[] = [
+  { value: 'PENDING', label: 'Pendiente' },
+  { value: 'IN_PROGRESS', label: 'En Proceso' },
+  { value: 'QUALITY_CHECK', label: 'Control de Calidad' },
+  { value: 'COMPLETED', label: 'Completada' },
+];
+
 export const TechnicianWorkbench: React.FC<TechnicianWorkbenchProps> = ({
   initialOrder,
   onSaveOrder,
@@ -41,22 +50,22 @@ export const TechnicianWorkbench: React.FC<TechnicianWorkbenchProps> = ({
 
     // Si todo es válido, limpiar errores y notificar al sistema
     setErrors([]);
-    onSaveOrder(order);
-    alert('¡Orden validada y guardada con éxito!');
+    onSaveOrder(order); // La responsabilidad de notificar al usuario (con un toast, etc.) pasa al componente padre.
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto', fontFamily: 'sans-serif' }}>
+    // Los estilos en línea se reemplazan por clases para mayor mantenibilidad.
+    <div className="workbench-container">
       <h2>Mesa de Trabajo del Técnico</h2>
       <hr />
 
       {/* Renderizado condicional de la lista de errores de validación */}
       {errors.length > 0 && (
-        <div style={{ backgroundColor: '#ffe6e6', color: '#cc0000', padding: '10px', borderRadius: '4px', marginBottom: '15px' }}>
+        <div className="error-box">
           <strong>No se pudo guardar la orden:</strong>
-          <ul style={{ margin: '5px 0 0 0', paddingLeft: '20px' }}>
-            {errors.map((err, idx) => (
-              <li key={idx}>{err}</li>
+          <ul className="error-list">
+            {errors.map((err) => (
+              <li key={err}>{err}</li> // Usar el error como key es seguro si los mensajes son únicos.
             ))}
           </ul>
         </div>
@@ -64,13 +73,13 @@ export const TechnicianWorkbench: React.FC<TechnicianWorkbenchProps> = ({
 
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: '15px' }}>
-          <label><strong>ID de Orden:</strong></label>
-          <input type="text" value={order.id} disabled style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
+          <label htmlFor="orderId"><strong>ID de Orden:</strong></label>
+          <input id="orderId" type="text" value={order.id} disabled className="input-field" />
         </div>
 
         <div style={{ marginBottom: '15px' }}>
-          <label><strong>Dispositivo:</strong></label>
-          <input type="text" value={order.deviceId} disabled style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
+          <label htmlFor="deviceId"><strong>Dispositivo:</strong></label>
+          <input id="deviceId" type="text" value={order.deviceId} disabled className="input-field" />
         </div>
 
         <div style={{ marginBottom: '15px' }}>
@@ -79,28 +88,23 @@ export const TechnicianWorkbench: React.FC<TechnicianWorkbenchProps> = ({
             id="orderStatus"
             value={order.status}
             onChange={handleStatusChange}
-            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+            className="input-field"
           >
-            <option value="PENDING">Pendiente</option>
-            <option value="IN_PROGRESS">En Proceso</option>
-            <option value="QUALITY_CHECK">Control de Calidad</option>
-            <option value="COMPLETED">Completada</option>
+            {/* Las opciones se generan dinámicamente desde la lista `statusOptions` */}
+            {statusOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </div>
 
         <div style={{ marginBottom: '15px' }}>
           <label htmlFor="technicianNotes"><strong>Notas Técnicas:</strong></label>
-          <textarea
-            id="technicianNotes"
-            rows={5}
-            value={order.technicianNotes || ''}
-            onChange={handleNotesChange}
-            placeholder="Escribe los detalles técnicos de la reparación..."
-            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-          />
+          <textarea id="technicianNotes" rows={5} value={order.technicianNotes || ''} onChange={handleNotesChange} placeholder="Escribe los detalles técnicos de la reparación..." className="input-field" />
         </div>
 
-        <button type="submit" style={{ padding: '10px 20px', backgroundColor: '#0066cc', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+        <button type="submit" className="submit-button">
           Guardar Cambios
         </button>
       </form>

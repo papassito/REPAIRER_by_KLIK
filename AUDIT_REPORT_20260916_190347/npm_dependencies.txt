@@ -1,0 +1,29 @@
+﻿repairer-by-klik@0.1.0 Y:\Documentos\GitHub\REPAIRER_by_KLIK
+Ôö£ÔöÇÔöÇ UNMET DEPENDENCY @types/react-dom@^18.2.22
+Ôö£ÔöÇÔöÇ UNMET DEPENDENCY @types/react@^18.2.66
+Ôö£ÔöÇÔöÇ UNMET DEPENDENCY @vitejs/plugin-react@^4.2.1
+Ôö£ÔöÇÔöÇ UNMET DEPENDENCY lucide-react@^0.344.0
+Ôö£ÔöÇÔöÇ UNMET DEPENDENCY react-dom@^18.2.0
+Ôö£ÔöÇÔöÇ UNMET DEPENDENCY react@^18.2.0
+Ôö£ÔöÇÔöÇ typescript@ invalid: "^5.2.2" from the root project
+ÔööÔöÇÔöÇ UNMET DEPENDENCY vite@^5.2.0
+
+node.exe : npm error code ELSPROBLEMS
+En línea: 1 Carácter: 1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm error code ELSPROBLEMS:String) [], Remot 
+   eException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+npm error missing: @types/react-dom@^18.2.22, required by repairer-by-klik@0.1.0
+npm error missing: @types/react@^18.2.66, required by repairer-by-klik@0.1.0
+npm error missing: @vitejs/plugin-react@^4.2.1, required by repairer-by-klik@0.1.0
+npm error missing: lucide-react@^0.344.0, required by repairer-by-klik@0.1.0
+npm error missing: react-dom@^18.2.0, required by repairer-by-klik@0.1.0
+npm error missing: react@^18.2.0, required by repairer-by-klik@0.1.0
+npm error invalid: typescript@ 
+Y:\Documentos\GitHub\REPAIRER_by_KLIK\node_modules\typescript
+npm error missing: vite@^5.2.0, required by repairer-by-klik@0.1.0
+npm error A complete log of this run can be found in: C:\Users\Radio 
+2027\AppData\Local\npm-cache\_logs\2026-09-17T02_04_01_239Z-debug-0.log

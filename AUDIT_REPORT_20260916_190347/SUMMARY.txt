@@ -1,0 +1,14 @@
+﻿
+
+AuditDate      : 2026-09-16T19:04:03.7859524-07:00
+RepoPath       : Y:\Documentos\GitHub\REPAIRER_by_KLIK
+AuditDirectory : Y:\Documentos\GitHub\REPAIRER_by_KLIK\AUDIT_REPORT_20260916_190347
+FileCount      : 155
+DirectoryCount : 69
+EmptyFiles     : 14
+SecretHits     : 12
+TodoHits       : 39
+TotalSizeMB    : 0.67
+
+
+

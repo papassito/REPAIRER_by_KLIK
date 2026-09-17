@@ -1,0 +1,7 @@
+﻿
+
+NpmListExitCode  : 1
+NpmAuditExitCode : 1
+
+
+

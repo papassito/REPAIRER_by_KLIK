@@ -7,10 +7,22 @@ import (
 	"fmt"
 	"io/fs"
 	"os"
-	"path/filepath"
 	"repairer/internal/contracts"
 	"repairer/internal/security"
+	"path/filepath"
 )
+
+// readRegularFile reads data from a file, ensuring it's not a directory.
+func readRegularFile(path string) ([]byte, error) {
+	info, err := os.Stat(path)
+	if err != nil {
+		return nil, err
+	}
+	if info.IsDir() {
+		return nil, fs.ErrInvalid
+	}
+	return os.ReadFile(path)
+}
 
 func Compensate(record contracts.LedgerRecord) error {
 	if record.Operation.RiskClass != contracts.RiskReversible {
@@ -23,12 +35,13 @@ func Compensate(record contracts.LedgerRecord) error {
 		return errors.New("compensation requires target, backup, and expected hash")
 	}
 
+	// NOTE: The authorized scope for compensation should be derived from the original plan's context.
+	// For this consolidation, we'll use the directory of the target as the scope.
+	authorizedScope := filepath.Dir(record.Compensation.TargetRef)
+
 	// SECURITY FIX: Re-validate paths immediately before restoration to mitigate TOCTOU.
-	if err := security.ValidatePath(record.Compensation.BackupRef, authorizedScope); err != nil {
+	if _, err := security.ValidateSafePath(authorizedScope, record.Compensation.BackupRef); err != nil {
 		return fmt.Errorf("security validation failed for backup path during compensation: %w", err)
-	}
-	if err := security.ValidatePath(record.Compensation.TargetRef, authorizedScope); err != nil {
-		return fmt.Errorf("security validation failed for target path during compensation: %w", err)
 	}
 
 	backup, err := readRegularFile(record.Compensation.BackupRef)

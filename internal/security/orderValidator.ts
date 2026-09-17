@@ -1,4 +1,6 @@
 // Importamos los tipos necesarios para la validación
+// NOTA: Este archivo debería estar en `src/utils/orderValidator.ts`
+
 import { RepairOrder } from '../types/repairer';
 
 // Estructura que devolverá el validador
@@ -6,6 +8,9 @@ export interface ValidationResult {
   isValid: boolean;
   errors: string[];
 }
+
+// Definimos las constantes de validación para evitar "números mágicos".
+const MIN_COMPLETED_NOTES_LENGTH = 10;
 
 /**
  * Valida las reglas de negocio de una orden de reparación
@@ -24,9 +29,9 @@ export function validateRepairOrder(order: RepairOrder): ValidationResult {
     errors.push('El identificador del dispositivo es obligatorio.');
   }
 
-  // 3. Regla de negocio: Para marcar como completada, se requieren notas de al menos 10 caracteres
-  if (order.status === 'COMPLETED' && (!order.technicianNotes || order.technicianNotes.trim().length < 10)) {
-    errors.push('Una orden completada requiere notas técnicas detalladas (mínimo 10 caracteres).');
+  // 3. Regla de negocio: Para marcar como completada, se requieren notas con una longitud mínima.
+  if (order.status === 'COMPLETED' && (!order.technicianNotes || order.technicianNotes.trim().length < MIN_COMPLETED_NOTES_LENGTH)) {
+    errors.push(`Una orden completada requiere notas técnicas detalladas (mínimo ${MIN_COMPLETED_NOTES_LENGTH} caracteres).`);
   }
 
   return {
