@@ -29,24 +29,12 @@ func ValidateSafePath(baseDir, targetPath string) (string, error) {
 		return "", ErrEmptyPath
 	}
 
-	cleanBase, err := filepath.Abs(filepath.Clean(baseDir))
-	if err != nil {
-		return "", err
-	}
-
 	// 2. Convert to a clean, absolute path for reliable comparison.
 	cleanTarget, err := filepath.Abs(filepath.Clean(targetPath))
 	if err != nil {
-		return "", err
 		return "", err // Propagate errors from path cleaning.
 	}
 
-	// 1. Verificación de salto de directorio (Path Traversal)
-	if !strings.HasPrefix(cleanTarget, cleanBase) {
-		return "", ErrInvalidPath
-	}
-
-	// 2. Verificación de nombres reservados en TODAS las partes divididas por puntos
 	// 3. Check for reserved Windows names *before* scope validation.
 	// This ensures the most specific error (ErrReservedName) is returned, fixing a test case.
 	baseName := filepath.Base(cleanTarget)
